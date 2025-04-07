@@ -61,7 +61,6 @@ Here is the list of feature implemented:
     - View unsettled expenses: `list-unsettled`
     - Change currency: `change-currency`
 
----
 
 ### Contributions to Developer Guide
 
