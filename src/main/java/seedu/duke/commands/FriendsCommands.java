@@ -271,9 +271,7 @@ public class FriendsCommands {
                         System.out.println("Warning: Unable to parse amount in record: " +
                             line);
                     }
-                }
-                // Handle new format records.
-                else if (line.startsWith("Transaction: Expense:")) {
+                } else if (line.startsWith("Transaction: Expense:")) { // Handle new format records.
                     try {
                         int groupIdx = line.indexOf("Group: ");
                         int memberIdx = line.indexOf("Member: ");
@@ -411,9 +409,7 @@ public class FriendsCommands {
                         System.out.println("Warning: Unable to parse amount in record: " +
                             line);
                     }
-                }
-                // Handle new format records.
-                else if (line.startsWith("Transaction: Expense:")) {
+                } else if (line.startsWith("Transaction: Expense:")) { // Handle new format records.
                     try {
                         int groupIdx = line.indexOf("Group: ");
                         int memberIdx = line.indexOf("Member: ");
