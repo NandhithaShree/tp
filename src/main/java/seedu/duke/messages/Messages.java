@@ -114,9 +114,15 @@ public class Messages {
 
             add
               Description: Add a new expense
-              Usage: add/<title>/<date>/<amount>
+              Usage: add/<title>/<category>/<date>/<amount>
               Format:
                 - Title: Short name for the expense
+                - Category: Input one of the following:
+                            - Food
+                            - Travel
+                            - Entertainment
+                            - Shopping
+                            - Miscellaneous
                 - Date: In DD-MM-YYYY format
                 - Amount: The monetary value (must be a positive number)
               You will then be prompted to enter a description (optional)
@@ -147,7 +153,7 @@ public class Messages {
 
             edit
               Description: Edit an existing expense
-              Usage: edit/<expense number>/<new title>/<new date>/<new amount>
+              Usage: edit/<expense number>/<new title>/<new description>/<new date>/<new amount>
               Note: Use 'x' to keep existing values for title, date, or amount
               You will then be prompted to change the description (optional)
 
@@ -187,10 +193,8 @@ public class Messages {
 
             split
               Description: Split an expense between the members of an existing group
-              Usage: split
-              You will be prompted to enter:
-                - Expense
-                - Group to split it among
+              Usage: split/<equal | assign>/<expense index>/<group name>
+                -If assign, you will be prompted for 
 
             summary
               Description: View expense summaries in different formats

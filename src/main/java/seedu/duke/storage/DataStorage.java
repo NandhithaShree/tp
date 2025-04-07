@@ -2,15 +2,16 @@
 package seedu.duke.storage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import seedu.duke.expense.Expense;
 import seedu.duke.messages.Messages;
+import seedu.duke.summary.Categories;
 
 /**
  * Handles storage operations for expenses, including saving, loading,
@@ -42,18 +43,20 @@ public class DataStorage {
      * @return true if saving was successful, false otherwise
      */
     public static boolean saveExpenses(List<Expense> expenses) {
-        assert expenses != null : "Expenses list should not be null";
-        try (FileWriter writer = new FileWriter(dataFile)) {
+        try {
+            ensureFileExists();
+            PrintWriter writer = new PrintWriter(dataFile);
             for (Expense expense : expenses) {
-                writer.write(expense.getTitle() + SEPARATOR
-                        + expense.getDescription() + SEPARATOR
-                        + expense.getDate() + SEPARATOR
-                        + expense.getAmount() + SEPARATOR
-                        + expense.getDone() + System.lineSeparator());
+                writer.println(expense.getTitle() + "|" + 
+                             expense.getCategory() + "|" + 
+                             expense.getDate() + "|" + 
+                             expense.getAmount() + "|" + 
+                             expense.getDone() + "|" + 
+                             expense.getGroupName());
             }
+            writer.close();
             return true;
         } catch (IOException e) {
-            System.out.println(Messages.errorMessageTag() + " Error saving expenses: " + e.getMessage());
             return false;
         }
     }
@@ -65,37 +68,30 @@ public class DataStorage {
      */
     public static List<Expense> loadExpenses() {
         List<Expense> expenses = new ArrayList<>();
-        File file = new File(dataFile);
-        
-        if (!file.exists()) {
-            return expenses;
-        }
-        
-        try (Scanner scanner = new Scanner(file)) {
-            if (!scanner.hasNext()) {
-                return expenses;
-            }
-            
+        try {
+            ensureFileExists();
+            Scanner scanner = new Scanner(new File(dataFile));
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] parts = line.split("\\" + SEPARATOR);
-
-                if (parts.length == 5) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= 6) {
                     String title = parts[0];
-                    String description = parts[1];
+                    Categories category = Categories.valueOf(parts[1]);
                     String date = parts[2];
                     double amount = Double.parseDouble(parts[3]);
-                    boolean isDone = true;
-                    if (parts[4].equals("false")) {
-                        isDone = false;
-                    }
-                    expenses.add(new Expense(title, description, date, amount, isDone));
+                    boolean isDone = Boolean.parseBoolean(parts[4]);
+                    String groupName = parts[5];
+                    
+                    Expense expense = new Expense(title, category, date, amount);
+                    expense.setDone(isDone);
+                    expense.setGroupName(groupName);
+                    expenses.add(expense);
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println(Messages.errorMessageTag() + " Error loading expenses: " + e.getMessage());
+            scanner.close();
+        } catch (IOException e) {
+            // Return empty list if file doesn't exist or can't be read
         }
-        
         return expenses;
     }
 

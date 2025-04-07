@@ -152,8 +152,8 @@ public class UI {
             currency.changeCurrency(command);
         } else if (command.startsWith(Commands.SUMMARY)){
             expenseCommand.showExpenseSummary(command);
-        } else if (command.equals(Commands.EXPORT)){
-            expenseCommand.exportExpenseSummary();
+        } else if (command.startsWith(Commands.EXPORT)){
+            expenseCommand.exportExpenseSummary(command);
         } else if (command.startsWith(Commands.FIND)){
             expenseCommand.findExpense(command);
         } else {
