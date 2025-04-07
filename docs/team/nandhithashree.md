@@ -15,6 +15,8 @@ splitting functions, as well as view analytics of their spending across multiple
 
 Code Contribution to the project: [Reposense Page](https://nus-cs2113-ay2425s2.github.io/tp-dashboard/?search=nandhithashree&breakdown=true&sort=groupTitle%20dsc&sortWithin=title&since=2025-02-21&timeframe=commit&mergegroup=&groupSelect=groupByRepos&checkedFileTypes=docs~functional-code~test-code~other)
 
+---
+
 ### Features Implemented
 Here is the list of feature implemented:
 
@@ -28,7 +30,7 @@ Here is the list of feature implemented:
 - **Functionality**: Separately displays settled expenses and unsettled expenses when prompted, followed by the number of expenses for each list.
 - **Justification**: Allows user to visualise and collate the number of each of those expenses, keeping track of paid expenses, and identifying outstanding payments more effectively. This separation provides clarity, allowing users to quickly assess their financial obligations and manage their budgets accordingly.
 
-#### Currency Management
+#### 3. Currency Management
 
 - **Functionality**: Manages currency conversion and exchange rates, allowing users to track their budget in different currencies. The system initializes exchange rates, loads the user's preferred currency from a file, and ensures accurate currency handling in expense tracking.
 - **Justification**:  This feature provides flexibility for users dealing with multiple currencies by enabling seamless conversions, thereby enhancing financial management and expense tracking across different monetary systems.
