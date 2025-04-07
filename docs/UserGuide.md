@@ -40,10 +40,27 @@ Terminates the program and saves the user's data, such as their payee list, grou
 
 #### Add an expense: `add`
 
-- **Format:** `add/<title>/<category>/<date>/<amount>`
+- **Format:** `add/<title>/<date>/<amount>`
 
 Add an expense with a title, description, date, amount. You have to first enter
-the `add` keyword, followed by the `title`,`category`, `date`, `amount`, each separated by a `/`.
+the `add` keyword, followed by the `title`, `date` and `amount`, each separated by a `/`.
+
+After that, you will be prompted to optionally add a `description` of maximum 200 characters.
+Please ensure the description is accurate and simple, because the summary analytics by category uses description to classify expenses.
+Please ensure the description is not wordy and it is to the point, to ensure your expenses are accurately classified.
+Please also ensure that the description does not contain conflicting categories.
+
+- **Example Usage:**
+
+```
+Had lunch with friends
+```
+
+- **Example Usage:**
+
+```
+Went to the movies with friends
+```
 
 The `date` field has to follow the DD-MM-YYYY format. You can choose the date to be in the past (earliest 2000),
 present and future, as long as it is a legitimate date (e.g. NOT 99-99-9999).
@@ -57,14 +74,33 @@ places. The `amount` is capped at 50,000SGD or its equivalent if your expenses a
 - **Example Usage:**
 
 ```
-add/Chicken Rice/Food/25-12-2025/100
+add/breakfast/23-08-2002/10.00
 ```
+
+- **Output:**
+
+```
+Enter the description (press Enter to skip):
+```
+
+If you choose to add a description within 200 characters:
+
 ```
 Expense added successfully:
-Title: chicken rice
-Category: Food
-Date: 25-12-2025
-Amount: 100.00
+Title: breakfast
+Description: McDonald's
+Date: 23-08-2002
+Amount: 10.00
+```
+
+If you skip the description part, the description field will be replaced with 'nil':
+
+```
+Expense added successfully:
+Title: breakfast
+Description: nil
+Date: 23-08-2002
+Amount: 10.00
 ```
 
 The entry will automatically be tagged with a unique expense ID.
@@ -77,43 +113,41 @@ You are not allowed to add an expense containing a `title` of an expense that al
 
 Edit an existing expense. Follows the same constraints and parameter-filling procedure as the `add` command.
 
-- **Format:** `edit/<expense ID>/<new title>/<new category>/<new date>/<new amount>`
+- **Format:** `edit/<expense ID>/<new title>/<new date>/<new amount>`
+
+If you do not wish to change the `title`, `date` or/and `amount`, type `X` (both lowercase and uppercase accepted)
+in the respective fields. Suppose you only want to change the `amount`:
 
 - **Example Usage:**
 
 ```
-edit/1/chicken rice/food/20-08-2004/20
+edit/1/x/X/10
 ```
 
 - **Output:**
-  If you choose to change the amount:
+
+```
+Enter the description (press Enter to skip):
+```
+
+If you choose to change the description within 200 characters:
 
 ```
 Expense edited successfully:
-Title: chicken rice
-Category: Food
-Date: 20-08-2004
-Amount: 20.00
+Title: breakfast
+Description: Technoedge Canteen
+Date: 23-08-2002
+Amount: 10.00
 ```
 
-If you choose to change the category within 200 characters:
+If you choose to keep the current description:
 
 ```
-Expense edited successfully:
-Title: chicken rice
-Category: Micellaneous
-Date: 20-08-2004
-Amount: 100.00
-```
-
-If you choose to keep the current category:
-
-```
-Expense edited successfully:
-Title: chicken rice
-Category: Food
-Date: 20-08-2004
-Amount: 100.00
+Expense added successfully:
+Title: breakfast
+Description: McDonald's
+Date: 23-08-2002
+Amount: 10.00
 ```
 
 ---
