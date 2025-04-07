@@ -91,6 +91,6 @@ Here is the list of feature implemented:
   - Object diagram for change currency
 
 ### Review/mentoring contributions:
-- **Bug Finding and Suggestions:** [PR review](https://github.com/AY2425S2-CS2113-F11-2/tp/pull/34/files)
+- **Bug Finding and Suggestions:** [Example PR review](https://github.com/AY2425S2-CS2113-F11-2/tp/pull/34/files)
 
 ---
