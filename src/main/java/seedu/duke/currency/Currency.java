@@ -38,6 +38,7 @@ public class Currency {
 
             if(s.hasNextLine()){
                 line = s.nextLine();
+                checkCorruptedFile();
                 currentCurrency = line;
             } else {
                 currentCurrency = Commands.DEFAULT_CURRENCY;
@@ -216,7 +217,44 @@ public class Currency {
      * @return The current currency ISO code.
      */
     public String getCurrentCurrency() {
+        try{
+            checkCorruptedFile();
+        } catch (FileNotFoundException e){
+            File f = new File("./currentCurrency");
+            System.out.println("file not found...");
+            System.out.println("A new file to load your current currency will be created for you!");
+        }
         return currentCurrency;
+    }
+
+    /**
+     * Checks the file "./currentCurrency" for the stored currency.
+     * If the stored currency is invalid (i.e., not found in the exchangeRates map),
+     * the file contents are cleared, and the currency is reverted to "SGD" (Singapore Dollar).
+     *
+     * @throws FileNotFoundException If the file "./currentCurrency" does not exist or cannot be opened for reading.
+     */
+    public void checkCorruptedFile() throws FileNotFoundException {
+        File f = new File("./currentCurrency");
+        Scanner s = new Scanner(f);
+        String line;
+
+        if(s.hasNextLine()) {
+            line = s.nextLine();
+            currentCurrency = line;
+        }
+
+        // Check if currentCurrency is not found in the exchangeRates
+        if (exchangeRates.get(currentCurrency) == null) {
+            // Clear the file contents
+            try (FileWriter writer = new FileWriter(f)) {
+                // The file is truncated automatically when opened in write mode
+                System.out.println("Current currency reverted to SGD because file is tampered with");
+                currentCurrency = "SGD";
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -285,6 +323,7 @@ public class Currency {
      * @param exchangeRate the custom exchange rate as a string
      */
     private void handleCustomExchangeRate(String newCurrency, String exchangeRate) {
+        getCurrentCurrency();
         if (!exchangeRates.containsKey(newCurrency)) {
             System.out.println("Please provide a valid currency...");
             return;
@@ -308,6 +347,7 @@ public class Currency {
      * @param newCurrency the target currency to convert expenses to
      */
     private void handleEstimatedExchangeRate(String newCurrency) {
+        getCurrentCurrency();
         Double exchangeRate = getExchangeRate(newCurrency);
 
         if (exchangeRate == null) {
