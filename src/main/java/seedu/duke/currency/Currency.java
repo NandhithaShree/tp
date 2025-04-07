@@ -2,6 +2,7 @@
 package seedu.duke.currency;
 import seedu.duke.commands.Commands;
 import seedu.duke.expense.BudgetManager;
+import seedu.duke.messages.Messages;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,6 +48,11 @@ public class Currency {
             File f = new File("./currentCurrency");
             System.out.println("file not found...");
             System.out.println("A new file to load your current currency will be created for you!");
+            try{
+                f.createNewFile();
+            } catch (IOException g){
+                System.out.println(" Error creating currency data file");
+            }
             currentCurrency = Commands.DEFAULT_CURRENCY;
         }
     }
@@ -223,6 +229,11 @@ public class Currency {
             File f = new File("./currentCurrency");
             System.out.println("file not found...");
             System.out.println("A new file to load your current currency will be created for you!");
+            try{
+                f.createNewFile();
+            } catch (IOException g){
+                System.out.println(" Error creating currency data file");
+            }
         }
         return currentCurrency;
     }
@@ -251,6 +262,7 @@ public class Currency {
                 // The file is truncated automatically when opened in write mode
                 System.out.println("Current currency reverted to SGD because file is tampered with");
                 currentCurrency = "SGD";
+                writer.write(currentCurrency);
             } catch (IOException e) {
                 e.printStackTrace();
             }
