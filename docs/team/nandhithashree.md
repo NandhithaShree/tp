@@ -13,7 +13,7 @@ splitting functions, as well as view analytics of their spending across multiple
 
 ### Code Contributed
 
-Code Contribution to the project: https://nus-cs2113-ay2425s2.github.io/tp-dashboard/?search=nandhithashree&breakdown=true&sort=groupTitle%20dsc&sortWithin=title&since=2025-02-21&timeframe=commit&mergegroup=&groupSelect=groupByRepos&checkedFileTypes=docs~functional-code~test-code~other
+Code Contribution to the project: [Reposense Page](https://nus-cs2113-ay2425s2.github.io/tp-dashboard/?search=nandhithashree&breakdown=true&sort=groupTitle%20dsc&sortWithin=title&since=2025-02-21&timeframe=commit&mergegroup=&groupSelect=groupByRepos&checkedFileTypes=docs~functional-code~test-code~other)
 
 ### Features Implemented
 Here is the list of feature implemented:
@@ -78,7 +78,7 @@ Here is the list of feature implemented:
 
 **Relevant Pull Request:** 
 - [PR #27](https://github.com/AY2425S2-CS2113-F11-2/tp/pull/27/files)
-  [PR #33](https://github.com/AY2425S2-CS2113-F11-2/tp/pull/33/files)
+- [PR #33](https://github.com/AY2425S2-CS2113-F11-2/tp/pull/33/files)
 - [PR #59](https://github.com/AY2425S2-CS2113-F11-2/tp/pull/59/files)
 ---
 
@@ -91,6 +91,6 @@ Here is the list of feature implemented:
   - Object diagram for change currency
 
 ### Review/mentoring contributions:
-- **Bug Finding and Suggestions:** https://github.com/AY2425S2-CS2113-F11-2/tp/pull/34/files
+- **Bug Finding and Suggestions:** [PR review](https://github.com/AY2425S2-CS2113-F11-2/tp/pull/34/files)
 
 ---
