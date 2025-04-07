@@ -1,47 +1,33 @@
 //@@author mohammedhamdhan
 package seedu.duke.expense;
 
+import seedu.duke.summary.Categories;
+
 /**
  * Represents an individual expense with title, description, and amount.
  */
 public class Expense {
     private String title;
-    private String description;
     private String date;
     private double amount;
     private Boolean isDone;
     private String groupName;
+    private Categories category;
 
     /**
-     * Constructs an Expense object with the given title, description, and amount.
+     * Constructs an Expense object with the given title, category, date, and amount.
      *
      * @param title       A short name or summary of the expense
-     * @param description Detailed information about the expense
+     * @param category    The category of the expense
      * @param date        Date of expense
      * @param amount      The monetary value of the expense
      */
-    public Expense(String title, String description, String date, double amount) {
+    public Expense(String title, Categories category, String date, double amount) {
         this.title = title;
-        this.description = description;
         this.date = date;
         this.amount = amount;
         this.isDone = false;
-    }
-
-    /**
-     * Creates a new Expense with the specified title, description, amount, and completion status.
-     *
-     * @param title       A short name or summary of the expense
-     * @param description Detailed information about the expense
-     * @param amount      The monetary value of the expense.
-     * @param isDone      Indicates whether the expense is settled
-     */
-    public Expense(String title, String description, String date, double amount, boolean isDone) {
-        this.title = title;
-        this.description = description;
-        this.date = date;
-        this.amount = amount;
-        this.isDone = isDone;
+        this.category = category;
     }
 
     /**
@@ -63,26 +49,6 @@ public class Expense {
     }
 
     /**
-     * Returns the description of the expense.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description of the expense.
-     *
-     * @param description the new description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    //@@author
-
-    //@@author matthewyeo1
-    /**
      * Returns the date of the expense.
      *
      * @return the date
@@ -99,9 +65,7 @@ public class Expense {
     public void setDate(String date) {
         this.date = date;
     }
-    //@@author
 
-    //@@author mohammedhamdhan
     /**
      * Returns the amount of the expense.
      *
@@ -121,6 +85,24 @@ public class Expense {
     }
 
     /**
+     * Returns the category of the expense.
+     *
+     * @return the category
+     */
+    public Categories getCategory() {
+        return category;
+    }
+
+    /**
+     * Sets the category of the expense.
+     *
+     * @param category the new category
+     */
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
+
+    /**
      * Returns a string representation of the expense.
      *
      * @return the string representation
@@ -128,10 +110,8 @@ public class Expense {
     @Override
     public String toString() {
         return "Title: " + title + "\n"
-                + "Description: " + description + "\n"
-                //@@author matthewyeo1
+                + "Category: " + category + "\n"
                 + "Date: " + date + "\n"
-                //@@author
                 + "Amount: " + String.format("%.2f", amount);
     }
 
@@ -152,9 +132,7 @@ public class Expense {
     public void setDone(Boolean isDone) {
         this.isDone = isDone;
     }
-    //@@author
 
-    //@@author matthewyeo1
     /**
      * Gets the group name associated with the expense.
      *
@@ -172,5 +150,4 @@ public class Expense {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-    //@@author
 }

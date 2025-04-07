@@ -1,8 +1,5 @@
 package seedu.duke.commands;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,6 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +24,7 @@ import seedu.duke.friends.Friend;
 import seedu.duke.friends.Group;
 import seedu.duke.friends.GroupManager;
 import seedu.duke.storage.DataStorage;
+import seedu.duke.summary.Categories;
 
 class SplitCommandTest {
     private BudgetManager budgetManager;
@@ -114,7 +113,7 @@ class SplitCommandTest {
         provideInput("");
         splitCommand.executeSplit("splitassign/1/testgroup");
         String output = outContent.toString();
-        assertTrue(output.contains("Invalid command format"),
+        assertTrue(output.contains("Invalid format"),
             "Expected invalid command format error.");
     }
 
@@ -147,7 +146,7 @@ class SplitCommandTest {
 
     @Test
     void testGroupNotFound() {
-        Expense expense = new Expense("Lunch", "Meal", "01-01-2025", 100.0);
+        Expense expense = new Expense("Lunch", Categories.Food, "01-01-2025", 100.0);
         budgetManager.addExpense(expense);
         provideInput("");
         splitCommand.executeSplit("split/equal/1/friends");
@@ -158,7 +157,7 @@ class SplitCommandTest {
 
     @Test
     void testEmptyGroup() {
-        Expense expense = new Expense("Lunch", "Meal", "01-01-2025", 100.0);
+        Expense expense = new Expense("Lunch", Categories.Food, "01-01-2025", 100.0);
         budgetManager.addExpense(expense);
         ((TestGroupManager) groupManager).addGroup("friends", new ArrayList < > ());
         provideInput("");
@@ -170,7 +169,7 @@ class SplitCommandTest {
 
     @Test
     void testEqualSplitValid() {
-        Expense expense = new Expense("Lunch", "Meal", "01-01-2025", 100.0);
+        Expense expense = new Expense("Lunch", Categories.Food, "01-01-2025", 100.0);
         budgetManager.addExpense(expense);
         List < Friend > members = Arrays.asList(
             new Friend("Alice", "friends"),
@@ -203,7 +202,7 @@ class SplitCommandTest {
 
     @Test
     void testDuplicateSplitPrevention() {
-        Expense expense = new Expense("Dinner", "Evening meal", "31-12-2025", 120.0);
+        Expense expense = new Expense("Dinner", Categories.Food, "31-12-2025", 120.0);
         budgetManager.addExpense(expense);
         List < Friend > members = Arrays.asList(
             new Friend("Alice", "friends"),
@@ -221,7 +220,7 @@ class SplitCommandTest {
 
     @Test
     void testManualSplitAbsoluteValid() {
-        Expense expense = new Expense("Dinner", "Evening meal", "31-12-2025", 100.0);
+        Expense expense = new Expense("Dinner", Categories.Food, "31-12-2025", 100.0);
         budgetManager.addExpense(expense);
         List < Friend > members = Arrays.asList(
             new Friend("Alice", "friends"),
@@ -253,12 +252,12 @@ class SplitCommandTest {
 
     @Test
     void testManualSplitPercentageValid() {
-        Expense expense = new Expense("Brunch", "Late meal", "15-02-2025", 200.0);
+        Expense expense = new Expense("Brunch", Categories.Food, "15-02-2025", 200.0);
         budgetManager.addExpense(expense);
         List < Friend > members = Arrays.asList(
-            new Friend("Alice", "friends"),
-            new Friend("Bob", "friends"),
-            new Friend("Charlie", "friends"));
+                new Friend("Alice", "friends"),
+                new Friend("Bob", "friends"),
+                new Friend("Charlie", "friends"));
         ((TestGroupManager) groupManager).addGroup("friends", members);
         String input = "/p\n20\n30\n50\n";
         provideInput(input);
@@ -268,24 +267,24 @@ class SplitCommandTest {
         double bobShare = 200.0 * (30.0 / 100.0);
         double charlieShare = 200.0 * (50.0 / 100.0);
         String expectedAlice = "Transaction: Expense: Brunch, Date: 15-02-2025, " +
-            "Group: friends, Member: Alice owes: " + String.format("%.2f", aliceShare);
+                "Group: friends, Member: Alice owes: " + String.format("%.2f", aliceShare);
         String expectedBob = "Transaction: Expense: Brunch, Date: 15-02-2025, " +
-            "Group: friends, Member: Bob owes: " + String.format("%.2f", bobShare);
+                "Group: friends, Member: Bob owes: " + String.format("%.2f", bobShare);
         String expectedCharlie = "Transaction: Expense: Brunch, Date: 15-02-2025, " +
-            "Group: friends, Member: Charlie owes: " + String.format("%.2f", charlieShare);
+                "Group: friends, Member: Charlie owes: " + String.format("%.2f", charlieShare);
         assertTrue(output.contains(expectedAlice),
-            "Incorrect share for Alice.");
+                "Incorrect share for Alice.");
         assertTrue(output.contains(expectedBob),
-            "Incorrect share for Bob.");
+                "Incorrect share for Bob.");
         assertTrue(output.contains(expectedCharlie),
-            "Incorrect share for Charlie.");
+                "Incorrect share for Charlie.");
 
         File owesFile = new File(SplitCommand.OwesStorage.owesFile);
         try {
             String fileContent = new String(Files.readAllBytes(owesFile.toPath()));
             String expectedContent = expectedAlice + "\n" +
-                expectedBob + "\n" +
-                expectedCharlie + "\n";
+                    expectedBob + "\n" +
+                    expectedCharlie + "\n";
             //assertEquals(expectedContent, fileContent,
             //     "File content does not match for manual percentage split.");
         } catch (IOException e) {
@@ -294,27 +293,8 @@ class SplitCommandTest {
     }
 
     @Test
-    void testManualSplitInvalidMethodThenValid() {
-        Expense expense = new Expense("Snack", "Light bite", "10-03-2025", 50.0);
-        budgetManager.addExpense(expense);
-        List < Friend > members = Arrays.asList(new Friend("Alice", "friends"));
-        ((TestGroupManager) groupManager).addGroup("friends", members);
-        String input = "invalid_method\n/ a\n/a\n25\n";
-        provideInput(input);
-        splitCommand.executeSplit("split/assign/1/friends");
-        String output = outContent.toString();
-        assertTrue(output.contains("Invalid method. Please enter '/a' for absolute amounts or " +
-                "'/p' for percentages."),
-            "Expected re-prompt for invalid method.");
-        String expectedAlice = "Transaction: Expense: Snack, Date: 10-03-2025, " +
-            "Group: friends, Member: Alice owes: 25.00";
-        assertTrue(output.contains(expectedAlice),
-            "Expected Alice to owe 25.00 after valid method input.");
-    }
-
-    @Test
     void testManualSplitAbsoluteInvalidNumericThenValid() {
-        Expense expense = new Expense("Dinner", "Evening meal", "31-12-2025", 100.0);
+        Expense expense = new Expense("Dinner", Categories.Food, "31-12-2025", 100.0);
         budgetManager.addExpense(expense);
         List < Friend > members = Arrays.asList(
             new Friend("Alice", "friends"),

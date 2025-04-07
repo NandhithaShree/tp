@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,10 +24,10 @@ import javax.swing.SwingConstants;
 import org.knowm.xchart.AnnotationTextPanel;
 import org.knowm.xchart.PieChart;
 import org.knowm.xchart.PieChartBuilder;
+import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.PieStyler.LabelType;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.Styler.ChartTheme;
-import org.knowm.xchart.XChartPanel;
 
 import seedu.duke.currency.Currency;
 import seedu.duke.expense.BudgetManager;
@@ -92,8 +90,8 @@ public class ExpenseCommand {
     //@@author matthewyeo1
 
     public static boolean isAddCommandValid(String[] parts) {
-        return parts.length >= 4 && !parts[1].trim().isEmpty() &&
-                !parts[2].trim().isEmpty() && !parts[3].trim().isEmpty();
+        return parts.length >= 5 && !parts[1].trim().isEmpty() &&
+                !parts[2].trim().isEmpty() && !parts[3].trim().isEmpty() && !parts[4].trim().isEmpty();
     }
 
     public static boolean isDeleteCommandValid(String[] parts) {
@@ -101,35 +99,50 @@ public class ExpenseCommand {
     }
 
     public static boolean isEditCommandValid(String[] parts) {
-        return parts.length >= 5 && !parts[1].trim().isEmpty() && !parts[4].trim().isEmpty();
+        return parts.length >= 6 && !parts[1].trim().isEmpty() && !parts[5].trim().isEmpty();
     }
 
     public static boolean isValidDate(String date) {
-        if (date.isEmpty()) {
+        if (date == null || date.isEmpty()) {
             return false;
         }
 
-        // Ensure format is correct: DD-MM-YYYY
+        // Check format DD-MM-YYYY
         if (!date.matches("\\d{2}-\\d{2}-\\d{4}")) {
             return false;
         }
 
         String[] parts = date.split("-");
+        int day = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
         int year = Integer.parseInt(parts[2]);
 
-        if (year < 2000) {
+        // Validate year (assuming expenses can't be from before 2000)
+        if (year < 2000 || year > 2100) {
             return false;
         }
 
-        // Validate actual date values
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        dateFormat.setLenient(false); // Strict date checking
-        try {
-            dateFormat.parse(date); // Throws exception if date is invalid
-            return true;
-        } catch (ParseException e) {
+        // Validate month
+        if (month < 1 || month > 12) {
             return false;
         }
+
+        // Validate day based on month
+        int maxDays;
+        if (month == 2) {
+            // Check for leap year
+            if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+                maxDays = 29;
+            } else {
+                maxDays = 28;
+            }
+        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+            maxDays = 30;
+        } else {
+            maxDays = 31;
+        }
+
+        return day >= 1 && day <= maxDays;
     }
 
     public static boolean isValidDescription(String description) {
@@ -184,18 +197,27 @@ public class ExpenseCommand {
      * Executes the add expense command.
      */
     public void executeAddExpense(String userInput) {
-        String[] parts = userInput.split("/", 4); // Split into title, date, amount
+        // Split and trim each part to handle multiple spaces
+        String[] parts = userInput.split("/");
+        if (parts.length < 5) {
+            System.out.println("Invalid format. Usage: add/<title>/<category>/<date>/<amount>");
+            return;
+        }
 
-        if (!isAddCommandValid(parts)) {
-            System.out.println("Invalid format. Usage: add/<title>/<date>/<amount>");
+        // Trim each part to handle multiple spaces
+        String title = parts[1].trim();
+        String categoryStr = parts[2].trim();
+        String date = parts[3].trim();
+        String amountStr = parts[4].trim();
+
+        // Edge case: Check if any required field is empty after trimming
+        if (title.isEmpty() || categoryStr.isEmpty() || date.isEmpty() || amountStr.isEmpty()) {
+            System.out.println("Invalid format. None of the fields can be empty. " +
+                    "Usage: add/<title>/<category>/<date>/<amount>");
             return;
         }
 
         try {
-            String title = parts[1].trim();
-            String date = parts[2].trim();
-            String amountStr = parts[3].trim();
-
             // Validate title uniqueness
             List<Expense> expenses = budgetManager.getAllExpenses();
             if (!isUniqueTitle(title, expenses) && !isUniqueDate(date, expenses)) {
@@ -203,40 +225,54 @@ public class ExpenseCommand {
                 return;
             }
 
-            // Validate date
+            // Validate category (case-insensitive)
+            Categories category;
+            try {
+                // Convert to proper case format (first letter uppercase, rest lowercase)
+                categoryStr = categoryStr.toLowerCase();
+                categoryStr = categoryStr.substring(0, 1).toUpperCase() + categoryStr.substring(1);
+                category = Categories.valueOf(categoryStr);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid category. Please use one of: Food, Shopping, Travel," +
+                        " Entertainment, Miscellaneous");
+                return;
+            }
+
+            // Validate date format and values
             if (!isValidDate(date)) {
                 System.out.println("Invalid date. Please enter a valid date in DD-MM-YYYY format.");
                 return;
             }
 
             // Validate amount
-            double amount = Double.parseDouble(amountStr);
+            double amount;
+            try {
+                amount = Double.parseDouble(amountStr);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid amount format. Please enter a valid number.");
+                return;
+            }
+
             if (amount < 0) {
                 System.out.println("Amount cannot be negative.");
                 return;
             }
+
+            if (amount == 0) {
+                System.out.println("Amount cannot be zero.");
+                return;
+            }
+
             if (!isAmountBelowCap(amount, currency)) {
                 return;
             }
 
-            // Prompt for optional description
-            System.out.println("Enter the description (press Enter to skip):");
-            String description = scanner.nextLine().trim();
-            if (description.isEmpty()) {
-                description = "nil";
-            } else if (!isValidDescription(description)) {
-                System.out.println("Description exceeds 200 characters.");
-                return;
-            }
-
-            // Create and add expense
-            Expense expense = new Expense(title, description, date, amount);
+            // Create and add the expense
+            Expense expense = new Expense(title, category, date, amount);
             budgetManager.addExpense(expense);
-
             System.out.println("Expense added successfully:");
             System.out.println(expense);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid amount format. Please enter a valid number.");
+
         } catch (Exception e) {
             System.out.println("Error adding expense: " + e.getMessage());
         }
@@ -294,21 +330,54 @@ public class ExpenseCommand {
      */
     public void executeEditExpense(String userInput) {
         try {
-            String[] parts = userInput.split("/", 5); // Split into ID, title, date, amount
-            if (!isEditCommandValid(parts)) {
-                System.out.println("Invalid format. Usage: edit/<expense ID>/<new title>/<new date>/<new amount>");
+            // Split by forward slash and handle multiple spaces
+            String[] parts = userInput.split("/");
+            if (parts.length < 6) {
+                System.out.println("Invalid format. Usage: edit/<expense ID>/<new title>/<new category>/" +
+                        "<new date>/<new amount>");
                 return;
             }
 
-            int index = Integer.parseInt(parts[1].trim()) - 1; // Convert to 0-based index
+            // Trim each part to handle multiple spaces
+            String expenseIdStr = parts[1].trim();
+            String title = parts[2].trim();
+            String categoryStr = parts[3].trim();
+            String date = parts[4].trim();
+            String amountStr = parts[5].trim();
+
+            // Edge case: Check if expense ID is empty after trimming
+            if (expenseIdStr.isEmpty()) {
+                System.out.println("Expense ID cannot be empty." +
+                        " Usage: edit/<expense ID>/<new title>/<new category>/<new date>/<new amount>");
+                return;
+            }
+
+            int index = Integer.parseInt(expenseIdStr) - 1; // Convert to 0-based index
             if (index < 0 || index >= budgetManager.getExpenseCount()) {
                 System.out.println("Please enter a valid expense number.");
                 return;
             }
 
-            String title = parts[2].trim().equalsIgnoreCase("x") ? null : parts[2].trim();
-            String date = parts[3].trim().equalsIgnoreCase("x") ? null : parts[3].trim();
-            String amountStr = parts[4].trim().equalsIgnoreCase("x") ? null : parts[4].trim();
+            // Handle 'x' values for fields to keep unchanged
+            title = title.equalsIgnoreCase("x") ? null : title;
+            categoryStr = categoryStr.equalsIgnoreCase("x") ? null : categoryStr;
+            date = date.equalsIgnoreCase("x") ? null : date;
+            amountStr = amountStr.equalsIgnoreCase("x") ? null : amountStr;
+
+            // Validate category if provided
+            Categories category = null;
+            if (categoryStr != null) {
+                try {
+                    // Convert to proper case format (first letter uppercase, rest lowercase)
+                    categoryStr = categoryStr.toLowerCase();
+                    categoryStr = categoryStr.substring(0, 1).toUpperCase() + categoryStr.substring(1);
+                    category = Categories.valueOf(categoryStr);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid category. Please use one of:" +
+                            " Food, Shopping, Travel, Entertainment, Miscellaneous");
+                    return;
+                }
+            }
 
             // Validate date if provided
             if (date != null && !isValidDate(date)) {
@@ -321,29 +390,20 @@ public class ExpenseCommand {
             if (amountStr != null) {
                 amount = Double.parseDouble(amountStr);
                 if (amount < 0) {
-                    System.out.println("Amount cannot be negative. Keeping current amount.");
-                    amount = -1;
+                    System.out.println("Amount cannot be negative.");
+                    return;
                 }
-                assert amount >= 0 || amount == -1 : "Amount should be non-negative or -1 for no change";
-
+                if (amount == 0) {
+                    System.out.println("Amount cannot be zero.");
+                    return;
+                }
                 if (!isAmountBelowCap(amount, currency)) {
-                    System.out.println("Amount exceeds the maximum allowed limit of 50,000 SGD (or its equivalent).");
                     return;
                 }
             }
 
-            // Prompt for optional description
-            System.out.println("Enter new description (press Enter to keep current):");
-            String description = scanner.nextLine().trim();
-            if (description.isEmpty()) {
-                description = "nil";
-            } else if (!isValidDescription(description)) {
-                System.out.println("Description exceeds 200 characters.");
-                return;
-            }
-
             // Edit the expense
-            Expense editedExpense = budgetManager.editExpense(index, title, description, date, amount);
+            Expense editedExpense = budgetManager.editExpense(index, title, category, date, amount);
             assert editedExpense != null : "Edited expense should not be null";
             System.out.println("Expense edited successfully:");
             System.out.println(editedExpense);
@@ -783,26 +843,23 @@ public class ExpenseCommand {
     /**
      * Exports the expense summary to a file.
      */
-    public void exportExpenseSummary() {
-        System.out.println("Choose export format:");
-        System.out.println("1. Monthly Summary");
-        System.out.println("2. Category-wise Summary");
-        System.out.println("3. Back to main menu");
+    public void exportExpenseSummary(String userInput) {
+        // Split and trim to handle multiple spaces
+        String[] parts = userInput.split("/", 2);
         
-        String choice = scanner.nextLine().trim();
-        
-        switch (choice) {
-        case "1":
-            exportMonthlySummary();
-            break;
-        case "2":
-            exportCategorySummary();
-            break;
-        case "3":
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            System.out.println("Invalid format. Usage: export/<monthly | category wise>");
             return;
-        default:
-            System.out.println("Invalid choice. Please select 1, 2, or 3.");
-            break;
+        }
+        
+        String exportType = parts[1].trim().toLowerCase();
+        
+        if (exportType.equals("monthly")) {
+            exportMonthlySummary();
+        } else if (exportType.equals("category wise")) {
+            exportCategorySummary();
+        } else {
+            System.out.println("Invalid export type. Please use 'monthly' or 'category wise'.");
         }
     }
 
@@ -1009,10 +1066,7 @@ public class ExpenseCommand {
         String lowerKeyword = keyword.toLowerCase();
 
         for (Expense expense : expenses) {
-
-            if ((expense.getTitle() != null && expense.getTitle().toLowerCase().contains(lowerKeyword)) ||
-                    (expense.getDescription() != null &&
-                            expense.getDescription().toLowerCase().contains(lowerKeyword))) {
+            if (expense.getTitle() != null && expense.getTitle().toLowerCase().contains(lowerKeyword)) {
                 matchingExpenses.add(expense);
             }
         }

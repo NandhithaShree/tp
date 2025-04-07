@@ -2,8 +2,10 @@ package seedu.duke.expense;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import seedu.duke.messages.Messages;
 import seedu.duke.storage.DataStorage;
+import seedu.duke.summary.Categories;
 
 //@@author mohammedhamdhan
 /**
@@ -26,6 +28,9 @@ public class BudgetManager {
      * @param expense the expense to add
      */
     public void addExpense(Expense expense) {
+        if (expense == null || expense.getCategory() == null) {
+            throw new IllegalArgumentException("Expense and category cannot be null");
+        }
         expenses.add(expense);
         DataStorage.saveExpenses(expenses);
     }
@@ -51,35 +56,33 @@ public class BudgetManager {
      *
      * @param index  the index of the expense to edit
      * @param title   the new title (null to keep existing)
-     * @param description the new description (null to keep existing)
+     * @param category the new category (null to keep existing)
+     * @param date    the new date (null to keep existing)
      * @param amount  the new amount (negative to keep existing)
      * @return the edited expense
      * @throws IndexOutOfBoundsException if the index is out of range
      */
-    public Expense editExpense(int index, String title, String description, String date, double amount)
+    public Expense editExpense(int index, String title, Categories category, String date, double amount)
             throws IndexOutOfBoundsException {
         if (index < 0 || index >= expenses.size()) {
             throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
         }
-
         Expense expense = expenses.get(index);
-
+        
+        // Only update fields that are not null (for title, category, date) or not negative (for amount)
         if (title != null) {
             expense.setTitle(title);
         }
-
-        if (description != null) {
-            expense.setDescription(description);
+        if (category != null) {
+            expense.setCategory(category);
         }
-
         if (date != null) {
             expense.setDate(date);
         }
-
         if (amount >= 0) {
             expense.setAmount(amount);
         }
-
+        
         DataStorage.saveExpenses(expenses);
         return expense;
     }
@@ -170,13 +173,12 @@ public class BudgetManager {
      * @throws IndexOutOfBoundsException if the provided index is invalid (out of range)
      */
     public void markExpense(int index) throws IndexOutOfBoundsException {
-
         if (index < 0 || index >= expenses.size()) {
             throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
         }
-
-        expenses.get(index).setDone(true);
-        saveAllExpenses();
+        Expense expense = expenses.get(index);
+        expense.setDone(true);
+        DataStorage.saveExpenses(expenses);
     }
 
     /**
@@ -191,13 +193,12 @@ public class BudgetManager {
      * @throws IndexOutOfBoundsException if the provided index is invalid (out of range)
      */
     public void unmarkExpense(int index) throws IndexOutOfBoundsException {
-
         if (index < 0 || index >= expenses.size()) {
             throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
         }
-
-        expenses.get(index).setDone(false);
-        saveAllExpenses();
+        Expense expense = expenses.get(index);
+        expense.setDone(false);
+        DataStorage.saveExpenses(expenses);
     }
 
     /**
@@ -213,7 +214,7 @@ public class BudgetManager {
 
         for(int i = 0; i < getExpenseCount(); i++){
             Expense expense = expenses.get(i);
-            editExpense(i, expense.getTitle(), expense.getDescription(), expense.getDate(),
+            editExpense(i, expense.getTitle(), expense.getCategory(), expense.getDate(),
                     expense.getAmount()*finalExchangeRate);
         }
     }

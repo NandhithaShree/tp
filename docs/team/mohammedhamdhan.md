@@ -114,10 +114,21 @@ Code Contribution to the project: [Reposense Page](https://nus-cs2113-ay2425s2.g
 
 #### Comprehensive Unit Tests
 
-- **Input Validation**: Test cases for invalid inputs in expense operations
-- **Summary Generation**: Tests for monthly and category-wise summaries
-- **Export Functionality**: Tests for file creation and content verification
-- **Visualization**: Tests for pie chart generation and display
+- **Input Validation Tests**:
+
+  - Implemented tests for empty fields in add expense operations 
+  - Developed comprehensive date validation tests for various invalid formats 
+  - Created amount validation tests for negative, zero, and invalid format amounts 
+  - Wrote tests for edit expense validation including handling empty expense IDs 
+
+- **Summary Generation Tests**:
+
+  - Implemented tests for monthly summary generation with multiple months 
+  - Created tests for category summary generation showing correct totals (
+
+- **Export Functionality Tests**:
+  - Developed tests for exporting monthly summaries verifying file creation and content 
+  - Implemented tests validating the export file's formatting and accuracy
 
 ### Contributions to Documentation
 
@@ -147,7 +158,7 @@ Code Contribution to the project: [Reposense Page](https://nus-cs2113-ay2425s2.g
   - Reviewed pull requests for expense-related features
   - Provided feedback on code quality and test coverage
 - **Bug Fixes**:
-  - Fixed issues in expense deletion logic
+  - Fixed issues in expense addition, deletion, split and summary logic
   - Improved error handling in summary generation
   - Enhanced input validation for expense operations
   - Implemented robust error handling for CRUD operations

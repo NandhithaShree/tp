@@ -2,6 +2,7 @@
 package seedu.duke.commands;
 import seedu.duke.friends.Group;
 import seedu.duke.friends.GroupManager;
+import seedu.duke.commands.SplitCommand.OwesStorage;
 import seedu.duke.friends.Friend;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class FriendsCommands {
     private GroupManager groupManager;
@@ -96,39 +98,52 @@ public class FriendsCommands {
      * Displays detailed owed transactions for a specific member in a group.
      */
     public void viewMember(String command) {
-        // Validate command input
         if (command == null || command.trim().isEmpty()) {
             System.out.println("Error: Command cannot be empty.");
             return;
         }
-        // Expected syntax: view-member/<groupname>/<member name>
-        String[] parts = command.trim().split(" */");
-        if (parts.length != 3) {
-            System.out.println("Invalid command format. Expected: view-member/<group name>/<member name>");
-            return;
+        if (!OwesStorage.verifyChecksum()) {
+            System.out.println("Error: The owedAmounts file has likely been tampered with." +
+                "Clearing contents of the file");
+
+            // clear the file
+            try (PrintWriter writer = new PrintWriter("owedAmounts.txt")) {
+                writer.print("");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try (PrintWriter writer = new PrintWriter("owedAmounts.chk")) {
+                writer.print("");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
-        // Validate command keyword
+        // Expected format: view-member/<groupname>/<member name>
+        String[] parts = command.trim().split("/");
+        if (parts.length != 3) {
+            System.out.println("Invalid command format. Expected: " +
+                "view-member/<groupname>/<member name>");
+            return;
+        }
         String commandWord = parts[0].trim();
         if (!commandWord.equalsIgnoreCase("view-member")) {
-            System.out.println("Invalid command. Expected command to start with 'view-member'.");
+            System.out.println("Invalid command. Expected command to start with " +
+                "'view-member'.");
             return;
         }
-
-        // Extract and validate group and member names
         String groupName = parts[1].trim();
         String memberName = parts[2].trim();
         if (groupName.isEmpty() || memberName.isEmpty()) {
             System.out.println("Error: Group name and member name cannot be empty.");
             return;
         }
-
         File file = new File("owedAmounts.txt");
         if (!file.exists()) {
             System.out.println("Error: Owed transactions file does not exist. No data available.");
             return;
         }
-
         List < String > allLines;
         try {
             allLines = java.nio.file.Files.readAllLines(file.toPath());
@@ -136,32 +151,46 @@ public class FriendsCommands {
             System.out.println("Error reading owed transactions file: " + e.getMessage());
             return;
         }
-
         if (allLines.isEmpty()) {
             System.out.println("No transactions found in the file.");
             return;
         }
-
         boolean found = false;
-        System.out.println("Transactions for member '" + memberName + "' in group '" + groupName + "':");
+        double totalAmount = 0.0;
+        System.out.println("Transactions for member '" + memberName +
+            "' in group '" + groupName + "':");
         for (String line: allLines) {
             if (line == null || line.trim().isEmpty()) {
-                continue; // skip blank lines
+                continue; // Skip blank lines
             }
             String trimmedLine = line.trim();
-            // Expect detailed transaction records to start with the specific prefix.
             if (!trimmedLine.startsWith("Transaction: Expense:")) {
                 System.out.println("Warning: Skipping unrecognized record: " + trimmedLine);
                 continue;
             }
-            // Check if the record contains both the specified group and member.
-            if (trimmedLine.contains("Group: " + groupName) && trimmedLine.contains("Member: " + memberName)) {
+            if (trimmedLine.contains("Group: " + groupName) &&
+                trimmedLine.contains("Member: " + memberName)) {
                 System.out.println(trimmedLine);
                 found = true;
+                int owesIndex = trimmedLine.lastIndexOf(" owes:");
+                if (owesIndex != -1) {
+                    String amountStr = trimmedLine.substring(owesIndex + " owes:".length())
+                        .trim();
+                    try {
+                        double amount = Double.parseDouble(amountStr);
+                        totalAmount += amount;
+                    } catch (NumberFormatException nfe) {
+                        System.out.println("Warning: Unable to parse amount in record: " +
+                            trimmedLine);
+                    }
+                }
             }
         }
-        if (!found) {
-            System.out.println("No transactions found for member '" + memberName + "' in group '" + groupName + "'.");
+        if (found) {
+            System.out.println("Total Amount: " + String.format("%.2f", totalAmount));
+        } else {
+            System.out.println("No transactions found for member '" + memberName +
+                "' in group '" + groupName + "'.");
         }
     }
 
@@ -175,7 +204,7 @@ public class FriendsCommands {
     public void viewGroup(String command) {
         String[] parts = command.trim().split(" */", 2);
         if (parts.length < 2 || !parts[0].equals("view-group")) {
-            System.out.println("Invalid command. Please use the format: view-group /<group name>");
+            System.out.println("Invalid command. Please use the format: view-group/<group name>");
             return;
         }
 
@@ -199,7 +228,6 @@ public class FriendsCommands {
                 if (line.isEmpty()) {
                     continue;
                 }
-                // Handle old format: line starts with "- "
                 if (line.startsWith("- ")) {
                     String[] lineParts = line.split(" owes: ");
                     if (lineParts.length == 2) {
@@ -212,9 +240,7 @@ public class FriendsCommands {
                             System.out.println("Warning: Unable to parse amount in record: " + line);
                         }
                     }
-                }
-                // Handle new format: detailed transaction record
-                else if (line.startsWith("Transaction: Expense:")) {
+                } else if (line.startsWith("Transaction: Expense:")) {
                     try {
                         int memberIdx = line.indexOf("Member: ");
                         int owesIdx = line.indexOf(" owes:");
@@ -243,12 +269,14 @@ public class FriendsCommands {
             System.out.println("No members in this group.");
         } else {
             System.out.println("Members:");
+            int memberCount = 1;
             for (Friend friend: members) {
                 String friendName = friend.getName();
-                double totalOwed = owedAmounts.getOrDefault(friendName, 0.0);
-                System.out.println(friendName + " - Expense: $" + String.format("%.2f", totalOwed));
+                System.out.println(memberCount + ". " + friendName);
+                memberCount++;
             }
         }
+
     }
 
 
@@ -395,7 +423,7 @@ public class FriendsCommands {
     public void removeMember(String command) {
         String[] parts = command.trim().split(" */", 3);
         if (parts.length < 3 || !parts[0].equals("remove-member")) {
-            System.out.println("Invalid command. Please use the format: remove-member /<member name> /<group-name>");
+            System.out.println("Invalid command. Please use the format: remove-member/<member name>/<group-name>");
             return;
         }
 
@@ -458,7 +486,7 @@ public class FriendsCommands {
     public void removeGroup(String command) {
         String[] parts = command.trim().split(" */", 2);
         if (parts.length < 2 || !parts[0].equals("remove-group")) {
-            System.out.println("Invalid command. Please use the format: remove-group /<group-name>");
+            System.out.println("Invalid command. Please use the format: remove-group/<group-name>");
             return;
         }
 

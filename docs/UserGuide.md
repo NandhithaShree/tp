@@ -40,12 +40,16 @@ Terminates the program and saves the user's data, such as their payee list, grou
 
 #### Add an expense: `add`
 
+- **Format:** `add/<title>/<date>/<amount>`
+
 Add an expense with a title, description, date, amount. You have to first enter
 the `add` keyword, followed by the `title`, `date` and `amount`, each separated by a `/`.
 
 After that, you will be prompted to optionally add a `description` of maximum 200 characters.
 Please ensure the description is accurate and simple, because the summary analytics by category uses description to classify expenses.
 Please ensure the description is not wordy and it is to the point, to ensure your expenses are accurately classified.
+Please also ensure that the description does not contain conflicting categories.
+
 - **Example Usage:**
 
 ```
@@ -66,8 +70,6 @@ your newly added expense, just like `list`.
 
 The `amount` can be entered as a whole number or floating-point number. The result will be rounded off to 2 decimal
 places. The `amount` is capped at 50,000SGD or its equivalent if your expenses are in another currency.
-
-- **Format:** `add/<title>/<date>/<amount>`
 
 - **Example Usage:**
 
@@ -103,8 +105,7 @@ Amount: 10.00
 
 The entry will automatically be tagged with a unique expense ID.
 
-You are not allowed to add an expense containing a `title` of an
-expense that already exists.
+You are not allowed to add an expense containing a `title` of an expense that already exists.
 
 ---
 
@@ -285,11 +286,15 @@ User can unmark an expense that has been marked already.
 
 User can find expenses that contain this keyword in the expense description
 
-- **Format and Usage:** `find`
+- **Format:** `find/<keyword>`
+- **Usage:** `find/taxi`
 - **Example:**
   ```
-  "Enter keyword to search for expenses:"
-  User input: taxi
+  Found 1 matching expense(s):
+  Title: taxi
+  Description: nil
+  Date: 12-12-2024
+  Amount: 50.00
   ```
 
 ---
@@ -320,10 +325,10 @@ After exchange, the amount will be rounded off to 2dp.
 
 #### View balance in wallet: `balance`
 
-Shows total money to be paid and total money to pay.
+Shows total money the user needs to pay.
 
 - **Format and Usage:** `balance`
-- 
+-
 - **Output:**
   ```
   Balance Overview
@@ -336,39 +341,39 @@ Shows total money to be paid and total money to pay.
 
 ### Manage Group Members:
 
-#### View Friends in a group: `create-group`
+#### Create a new group: `create-group`
 
 Create a new group to split expenses with.
+If you would like to include yourself in the group, please add your name as well explicitly when the application asks to enter name.
 
-- **Usage:**
+- **Format** `create-group/<group-name>`
+- **Usage** `create-group/test`
 
+- **Output:**
   ```
-  create-group
-  "Enter the group name:" test group
-  "Who would you like to add to the group? (Type 'done' to finish)"
-  "Enter name:" apple
-  "Enter name:" mango
-  "Enter name:" carrot
-  "Enter name:" done
+  Who would you like to add to the group? (Type 'done' to finish)
+  Enter name: name1
+  Enter name: name2
+  Enter name: done
   Group created successfully!
-
   ```
 
 ---
 
-#### Add Friends to a group: `view-group`
+#### View friends and expenses in a certain group: `view-group`
 
 View a specific group and see how much each member owes.
 
-- **Usage:**
+- **Format:** `view-group/<group-name>`
+- **Usage:** `view-group/test`
+
+- **Output:**
 
   ```
-  view-group
-  Enter the group name to view: TestGroup
-  Group: TestGroup
-  Members of group "TestGroup":
-  - Alice owes: 25.00
-  - Bob owes: 25.00
+  Group: test
+  Members:
+  abc - Expense: $0.00
+  cde - Expense: $0.00
 
   ```
 
@@ -378,41 +383,50 @@ View a specific group and see how much each member owes.
 
 Adds a user to a group.
 
-- **Usage:**
+- **Format:** `add-member/<member-name>/<group-name>`
+- **Usage:** `add-member/hij/test`
+
+- **Output:**
+  If the group exists, then adds to the existing group.
 
   ```
-  add-member
-  Enter the name of the member to add: natasha
-  Enter the group name: TestGroup
-  natasha has been added to TestGroup
+  hij has been added to test
+  ```
 
+  If the group does not exist, the user is prompted to create the group first.
+
+  ```
+  Group does not exist. Would you like to create this group first? (y/n): y
+  Group test1 has been created and hij has been added.
   ```
 
 ---
 
-#### Add Friends to a group: `remove-member`
+#### Remove Friend from a group: `remove-member`
 
 Removes a member from a group
 
-- **Usage:**
+- **Format:** `remove-member/<member name>/<group-name>`
+- **Usage:** `remove-member/hij/test`
+
+- **Output:**
 
   ```
-  remove-member
-  Enter the name of the member to remove: natasha
-  Enter name of group to remove member from: TestGroup
-
+  Are you sure you want to remove hij from test1? (y/n): y
+  hij has been removed from test1
   ```
 
 ---
 
-#### Add Friends to a group: `my-groups`
+#### View all groups created by user: `my-groups`
 
-Shows all the user's groups.
+Shows all the groups that the user has created.
 
-- **Usage:**
+- **Format and Usage:** `my-groups`
+
+- **Output:**
 
   ```
-  my-groups
   Group Name: TestGroup
   Members:
   - Alice
@@ -432,16 +446,17 @@ Shows all the user's groups.
 
 ---
 
-#### Add Friends to a group: `remove-group`
+#### Removes an existing group: `remove-group`
 
 Removes an entire group.
 
-- **Usage:**
+- **Format:** `remove-group/<group-name>`
+- **Usage:** `remove-group/test1`
 
+- **Output:**
   ```
-  remove-group
-  Enter the name of the group to remove: TestGroup
-
+  Are you sure you want to remove the group test1? (y/n): y
+  Group test1 has been removed.
   ```
 
 ---
@@ -557,7 +572,7 @@ Allows an expense to be split among a certain group, either equally or via manua
 
 Displays comprehensive analytics of your expenses through different visualization options. This command helps you track and analyze your spending patterns.
 
-- **Format:** `summary/[BY-MONTH|BY-CATEGORY]/[Y|N]`
+- **Format:** `summary/<BY-MONTH|BY-CATEGORY>/<Y|N>`
 
   - First parameter must be either `BY-MONTH` or `BY-CATEGORY`
   - Second parameter must be `Y` or `N` for visualization
@@ -597,8 +612,8 @@ Displays comprehensive analytics of your expenses through different visualizatio
 
   [Pie chart visualization will appear in a separate window]
   ```
-  ![image](https://github.com/user-attachments/assets/5eb6f031-9924-43d2-ab6b-3540e15fcefb)
 
+  ![image](https://github.com/user-attachments/assets/5eb6f031-9924-43d2-ab6b-3540e15fcefb)
 
 - **Notes about Pie Chart Visualization:**
   - Only available for category-wise summary
@@ -607,6 +622,7 @@ Displays comprehensive analytics of your expenses through different visualizatio
     - Very small expenses may not be clearly visible on the chart
     - Hover over segments to see exact values
     - Legend shows both amount and percentage for each category
+  - **IMPORTANT**: You must close the pie chart window before exiting the program. Due to a limitation in the visualization API, if you do not close the window, the program will not terminate properly.
   - Chart window will automatically close when program exits
   - Close the chart window to return to the application
 
@@ -759,5 +775,6 @@ Here's a quick reference for all available commands:
 | View All Groups | `my-groups`                                             | `my-groups`                            |
 | Remove Group    | `remove-group`                                          | `remove-group` (then enter group name) |
 | Split Expense   | `split`                                                 | `split` (then follow prompts)          |
-| View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`                |
+| View Summary    | `summary/<BY-MONTH\|BY-CATEGORY>/<Y\|N>`                | `summary/BY-CATEGORY/Y`                |
+| Export Summary  | `export/<monthly\|category wise>`                       | `export/monthly`                       |
 | Sort List       | `sort-list/<option>`                                    | `sort-list/1`                          |
