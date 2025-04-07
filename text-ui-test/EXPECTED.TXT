@@ -56,7 +56,7 @@ edit
   Note: Use 'x' to keep existing values for title, date, amount or category
 
 balance
-  Description: Show the balance overview (total expenses and amount owed)
+  Description: Show the balance overview (total unsettled expenses)
   Usage: balance
 
 create-group
@@ -136,143 +136,104 @@ exit
 
 ________________________________________________________________________________
 
-Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
+Enter command: Expense added successfully:
+Title: groceries
+Category: Food
+Date: 01-01-2025
+Amount: 100.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense added successfully:
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense added successfully:
+Title: lunch
+Category: Food
+Date: 03-01-2025
+Amount: 20.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
+Enter command: All expenses are in SGD
+List of Expenses:
+Expense #1
+Title: groceries
+Category: Food
+Date: 01-01-2025
+Amount: 100.00
+
+Expense #2
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
+
+Expense #3
+Title: lunch
+Category: Food
+Date: 03-01-2025
+Amount: 20.00
+
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Are you sure you want to delete this expense? (y/n)
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
+Owed amounts file not found. No amounts to update.
+Expense deleted successfully:
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense edited successfully:
+Title: new groceries
+Category: Food
+Date: 01-01-2025
+Amount: 150.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
+Enter command: Expense 1 successfully marked!
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense 1 successfully unmarked!
 
 ________________________________________________________________________________
 
-Enter command: No expenses found.
+Enter command: Found 1 matching expense(s):
+Title: new groceries
+Category: Food
+Date: 01-01-2025
+Amount: 150.00
+
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Please enter a valid expense number.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid format. Usage: edit/<expense ID>/<new title>/<new category>/<new date>/<new amount>
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Please enter a valid expense number.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Please enter a valid expense number.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: No expenses found.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid format. Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: No expenses to export!
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
+Enter command: Monthly summary exported to monthly_summary.txt
 
 ________________________________________________________________________________
 
 Enter command: Balance Overview
 ----------------
-Total number of unsettled expenses: 0
-Total unsettled amount: 0.00
+Total number of unsettled expenses: 2
+Total unsettled amount: 170.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid format. Usage: change-currency/1/<currency to change to>/<exchange rate>
-OR change-currency/2/<currency to change to>
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
+Enter command: Currency successfully changed to EUR
 
 ________________________________________________________________________________
 
@@ -327,7 +288,7 @@ edit
   Note: Use 'x' to keep existing values for title, date, amount or category
 
 balance
-  Description: Show the balance overview (total expenses and amount owed)
+  Description: Show the balance overview (total unsettled expenses)
   Usage: balance
 
 create-group
@@ -404,10 +365,6 @@ exit
   Description: Exit the program
   Usage: exit
 
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
 
 ________________________________________________________________________________
 

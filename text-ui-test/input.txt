@@ -8,7 +8,6 @@ edit/1/New Groceries/X/X/150
 mark/1
 unmark/1
 find/Groceries
-summary/BY-MONTH/N
 export/monthly
 balance
 change-currency/1/EUR/0.85
