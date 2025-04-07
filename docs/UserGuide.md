@@ -622,9 +622,9 @@ Displays comprehensive analytics of your expenses through different visualizatio
 
 Exports your expense summaries to text files for record-keeping, sharing, or external analysis.
 
-- **Format:** `export/<monthly|category wise>`
+- **Format:** `export/<monthly|category-wise>`
 
-  - Parameter must be either `monthly` or `category wise`
+  - Parameter must be either `monthly` or `category-wise`
 
 - **Features:**
 
@@ -635,7 +635,7 @@ Exports your expense summaries to text files for record-keeping, sharing, or ext
      - Lists all expenses within each month with details
      - Maintains the same format as the monthly summary display
 
-  2. **Category-wise Summary Export (`export/category wise`)**
+  2. **Category-wise Summary Export (`export/category-wise`)**
      - Exports data to `category_summary.txt`
      - Contains breakdown of expenses by category
      - Shows total amount and count for each category
@@ -801,7 +801,7 @@ Amount: 10.00
 Here's a quick reference for all available commands:
 
 | Command         | Format                                                  | Example Usage                 |
-| --------------- |---------------------------------------------------------|-------------------------------|
+| --------------- | ------------------------------------------------------- | ----------------------------- |
 | Help            | `help`                                                  | `help`                        |
 | Exit            | `exit`                                                  | `exit`                        |
 | Add Expense     | `add/<title>/<date>/<amount>`                           | `add/lunch/01-01-2024/15.50`  |
@@ -823,5 +823,5 @@ Here's a quick reference for all available commands:
 | Remove Group    | `remove-group/<group-name>`                             | `remove-group/test`           |
 | Split Expense   | `split`                                                 | `split` (then follow prompts) |
 | View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`       |
-| Export Summary  | `export/<monthly\|category wise>`                       | `export/monthly`              |
+| Export Summary  | `export/<monthly\|category-wise>`                       | `export/monthly`              |
 | Sort List       | `sort-list/<option>`                                    | `sort-list/1`                 |

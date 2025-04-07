@@ -3,6 +3,7 @@ package seedu.duke.messages;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JFrame;
 
 public class Messages {
@@ -205,7 +206,7 @@ public class Messages {
 
             export
               Description: Export expense summaries to text files
-              Usage: export/<monthly | category wise>
+              Usage: export/<monthly | category-wise>
               
 
             change-currency
