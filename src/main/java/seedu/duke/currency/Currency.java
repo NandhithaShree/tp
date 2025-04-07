@@ -26,27 +26,42 @@ public class Currency {
      * @param scanner The scanner object for reading user input.
      * @param budgetManager The budget manager object to manage the expenses.
      */
-    public Currency(Scanner scanner, BudgetManager budgetManager){
+    public Currency(Scanner scanner, BudgetManager budgetManager) {
         initializeExchangeRates();
         this.scanner = scanner;
         this.budgetManager = budgetManager;
 
-        try{
-            File f = new File("./currentCurrency");
-            Scanner s = new Scanner(f);
-            String line;
-
-            if(s.hasNextLine()){
-                line = s.nextLine();
-                currentCurrency = line;
-            } else {
-                currentCurrency = Commands.DEFAULT_CURRENCY;
-            }
-        } catch (FileNotFoundException e){
-            File f = new File("./currentCurrency");
-            System.out.println("file not found...");
+        File file = new File("./currentCurrency");
+        if (!file.exists()) {
+            System.out.println("File not found...");
             System.out.println("A new file to load your current currency will be created for you!");
             currentCurrency = Commands.DEFAULT_CURRENCY;
+            return;
+        }
+
+        try (Scanner s = new Scanner(file)) {
+            if (!s.hasNextLine()) {
+                currentCurrency = Commands.DEFAULT_CURRENCY;
+                return;
+            }
+
+            String line = s.nextLine();
+            if (getExchangeRate(line) == null) {
+                currentCurrency = "SGD";
+                System.out.println("Currency file was tampered with. Currency reverted to SGD");
+
+                try {
+                    writeToFile("SGD");
+                } catch (IOException e) {
+                    System.out.println("Error recording the change of currency.");
+                }
+            } else {
+                currentCurrency = line;
+            }
+        } catch (FileNotFoundException e) {
+            // This shouldn't happen because we already checked file existence
+            currentCurrency = Commands.DEFAULT_CURRENCY;
+            System.out.println("Unexpected error: file was not found during reading.");
         }
     }
 
