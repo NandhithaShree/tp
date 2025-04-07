@@ -157,7 +157,7 @@ public class Messages {
               Note: Use 'x' to keep existing values for title, date, amount or category
 
             balance
-              Description: Show the balance overview (total expenses and amount owed)
+              Description: Show the balance overview (total unsettled expenses)
               Usage: balance
 
             create-group

@@ -1,37 +1,16 @@
-add/Groceries/01-01-2025/100
-Weekly food shopping
-
-add/Dinner/02-01-2025/50
-Italian restaurant
-
-add/Lunch/03-01-2025/20
-
+add/Groceries/Food/01-01-2025/100
+add/Dinner/Food/02-01-2025/50
+add/Lunch/Food/03-01-2025/20
 list
-
 delete/2
 y
-
-edit/1/New Groceries/X/150
-Updated description
-
+edit/1/New Groceries/X/X/150
 mark/1
-
 unmark/1
-
 find/Groceries
-
-summary
-
-export
-1
-
+summary/BY-MONTH/N
+export/monthly
 balance
-
-change-currency
-1
-EUR
-0.85
-
+change-currency/1/EUR/0.85
 help
-
 exit
