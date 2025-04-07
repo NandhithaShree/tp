@@ -85,6 +85,9 @@ Here is the list of feature implemented:
 ---
 
 ### Contributions to Team-Based Tasks
+- **Diagram**
+  - Sequence Diagram for change currency
+  - Object Diagram for change currency
 - **Code Review**
   - Object Diagram for currency
   - Code reviews for teammates
