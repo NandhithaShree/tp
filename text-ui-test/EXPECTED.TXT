@@ -160,7 +160,8 @@ Amount: 20.00
 
 ________________________________________________________________________________
 
-Enter command: All expenses are in SGD
+Enter command: Expenses file is intact. No tampering detected.
+All expenses are in SGD
 List of Expenses:
 Expense #1
 Title: groceries
@@ -183,12 +184,12 @@ Amount: 20.00
 
 ________________________________________________________________________________
 
-Enter command: Are you sure you want to delete this expense? (y/n)
+Enter command: Expenses file is intact. No tampering detected.
+Are you sure you want to delete this expense? (y/n)
 Title: dinner
 Category: Food
 Date: 02-01-2025
 Amount: 50.00
-Owed amounts file not found. No amounts to update.
 Expense deleted successfully:
 Title: dinner
 Category: Food
@@ -197,39 +198,32 @@ Amount: 50.00
 
 ________________________________________________________________________________
 
-Enter command: Expense edited successfully:
-Title: new groceries
-Category: Food
-Date: 01-01-2025
-Amount: 150.00
+Enter command: Expenses file is intact. No tampering detected.
+Expenses file is intact. No tampering detected.
+Expense edited successfully:
 
 ________________________________________________________________________________
 
-Enter command: Expense 1 successfully marked!
+Enter command: Please enter a valid expense number.
 
 ________________________________________________________________________________
 
-Enter command: Expense 1 successfully unmarked!
+Enter command: Please enter a valid expense number.
 
 ________________________________________________________________________________
 
-Enter command: Found 1 matching expense(s):
-Title: new groceries
-Category: Food
-Date: 01-01-2025
-Amount: 150.00
-
+Enter command: No expenses found.
 
 ________________________________________________________________________________
 
-Enter command: Monthly summary exported to monthly_summary.txt
+Enter command: No expenses to export!
 
 ________________________________________________________________________________
 
 Enter command: Balance Overview
 ----------------
-Total number of unsettled expenses: 2
-Total unsettled amount: 170.00
+Total number of unsettled expenses: 0
+Total unsettled amount: 0.00
 
 ________________________________________________________________________________
 
