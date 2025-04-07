@@ -168,7 +168,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: No expenses found.
+Enter command: Error verifying checksum: expenses.chk
+Tampering detected in expenses file. Deleting file...
+Expenses file deleted successfully.
+Error loading expenses: expenses.txt
+No expenses found in the list.
 
 ________________________________________________________________________________
 
@@ -176,7 +180,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Please enter a valid expense number.
+Enter command: Error verifying checksum: expenses.txt
+Tampering detected in expenses file. Deleting file...
+Expenses file does not exist.
+Error loading expenses: expenses.txt
+No expenses found. The file may have been tampered with and cleared.
 
 ________________________________________________________________________________
 
