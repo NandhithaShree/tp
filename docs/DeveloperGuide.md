@@ -493,8 +493,8 @@ The `viewGroup(String command)` method is responsible for displaying the details
 
 #### Viewing an existing group
 
-The `viewGroup()` method is responsible for displaying the details of a specific group, it includes its members and associated expenses.
-This method is essential for users who wish to view group details and any expenses related to group members.
+The `viewGroup()` method is responsible for displaying the details of a specific group, it includes its members and the expense attributes to them from the split of the entered group.
+This method is essential for users who wish to view group members and how much they owe in a certain group.
 
 - **Input:**
 
@@ -508,10 +508,7 @@ This method is essential for users who wish to view group details and any expens
 
 - **Loading Expense Data:**
 
-  - The method reads from the `owedAmounts.txt` file, which contains expense data.
-  - It loads this data into a map owedAmounts, where:
-    - The key is the member's name.
-    - The value is the accumulated amount they owe.
+  - The method reads from the `owedAmounts.txt` file, which contains member data.
   - The method ensures that the amounts are accumulated for each member instead of being overwritten.
 
 - **Display Group Members and Expenses:**
@@ -520,8 +517,8 @@ This method is essential for users who wish to view group details and any expens
   - For each member, it:
     - Retrieves their name.
     - Checks the owedAmounts map for any recorded expenses.
-    - Displays the member's name along with the accumulated expense amount.
-  - If a member has no recorded expense, the amount displayed is 0.00.
+    - Displays the member's name along with the accumulated expense amount for that group.
+    - If a member has no recorded expense, the amount displayed is 0.00.
 
 #### Viewing all user's Groups
 
@@ -537,6 +534,10 @@ The `viewAllGroups()` method is designed to display a list of all the groups tha
   - This allows the user to see a comprehensive list of all group names and any other associated information that the Group class's `toString()` method returns.
 
 #### Viewing group directly
+
+The `viewGroupDirect()` method is responsible for displaying the details of a specific group, it includes its members and associated expenses. The user cannot call it directly but it is called by the split function. It takes in the groupname from the  `executeSplit()` method so that the user is not required to enter the group name and it acts as a summary after the split operation.
+
+This method is essential for users who wish to view group details and any expenses related to group members.
 
 #### Add a member
 
@@ -604,10 +605,13 @@ The `removeMember(String command)` method allows the user to add a new member to
 
 ### 3.1.6 SplitCommand Class
 
-The SplitCommand class is responsible for splitting a selected expense among members of a specified group.
-It accepts a unified command in the following format:
+The `SplitCommand` class handles the functionality of splitting expenses among members in a group. It supports both equal and manual assignment (absolute or percentage-based) and ensures transaction details are logged with tamper prevention through checksum verification.
 
-`split/<equal or assign>/<expense index>/<group name>`
+`split/<equal | assign>/<expense index>/<group name>`
+
+- Parse and validate the split command format:  
+  `split/<equal|assign>/<expense index>/<group name>`
+
 
 - **Equal Split:**  
   Divides the total expense amount equally among all group members.
@@ -621,11 +625,14 @@ It accepts a unified command in the following format:
 - **Error and Exception Handling:**  
   Before proceeding, the parser also checks to ensure that all the input is valid and raises the appropriate exceptions. This check is done for negative index, NULL, and other invalid inputs and parameters.
 
+- **Tamper Checking:**  
+  The program writes the checksum of the `owedAmounts.txt` file to a seperate file to ensure data integrity. When the `owedAmounts.txt` is accessed by other functions, the program uses the checksum to determine if the file has been tampered with. If it has, the data files are then purged. This behavior should not occur under normal circumstances and only happens if a user accidentally/maliciously modifies the file's contents.
+
 - **Transaction Logging:**  
   For every split operation, detailed transaction records are created in the format:  
   `Transaction: Expense: <title>, Date: <date>, Group: <group>, Member: <member> owes: <amount>`
 
-#### Methods
+#### Key Methods for Split
 
 #### `SplitCommand(Scanner scanner, GroupManager groupManager, FriendsCommands friendsCommands)`
 
@@ -640,13 +647,10 @@ Executes the flow for splitting an expense. Follows the format as required above
 
 `split/<equal or assign>/<expense index>/<group name>`
 
-- Prompts the user to choose:
-  - `[1]` Equal Split
-  - `[2]` Manual Split
-  - `[x]` Cancel
-- Displays available expenses and validates the selected index.
-- Retrieves group and validates its existence and membership.
-- Delegates to the chosen split method:
+  - Parses the command
+  - Handles validation of group, index, format
+  - Executes equal or manual splitting
+  - Updates file and calls group display
 
   - **Equal Split:**
 
@@ -666,28 +670,14 @@ Executes the flow for splitting an expense. Follows the format as required above
 
 - Calls `friendsCommands.viewGroupDirect()` to update group display after split.
 
-#### Internal Logic (within `executeSplit()`)
+#### `createTransactionRecord(...)`
+  - Formats and returns a string log of one member's owed transaction
 
-- **Equal Split:**
+#### `OwesStorage.appendOwes(...)`
+  - Appends a transaction record to `owedAmounts.txt`
+  - Wrapped in try-catch for IO handling
 
-  - Computes `share = totalAmount / numMembers`.
-  - Loops through group members and logs each person's owed amount.
-  - Writes each owed entry to `OwesStorage`.
 
-- **Manual Split – Absolute:**
-
-  - Prompts for each member's assigned amount.
-  - Tracks remaining amount and prevents over-allocation.
-  - Logs each owed amount to storage.
-
-- **Manual Split – Percentage:**
-  - Prompts for each member's share percentage.
-  - Computes owed amount as `totalAmount * (percentage / 100)`.
-  - Validates total assigned percentages.
-
-Below is the UML sequence diagram for the `SplitCommand` class.
-
-![SplitClassSequenceDiagram.png](diagrams/SplitClassSequenceDiagram.png)
 
 ### 3.1.7 BudgetManager Class
 
@@ -1351,13 +1341,18 @@ after the command duration has ended and upon exiting the program, handled by th
 
 ### 4.2 Expense CRUD Feature
 
-Below is the UML sequence diagram for the classes involved in the CRUD operations regarding user-created expenses. The main application class calls the constructor
-for the UI class, which calls its own method `processCommand()` that takes in the user input as a parameter and processes the addition, editing, deletion and saving of expenses depending on specific user inputs
-as shown in the diagram.
+Below is the UML sequence diagram for the split class. It requires external dependencies such as DataStorage, GRoupManager, OwesStorage, and FriendsCommands to seamlessly integrate the split function. A large part of the calls are to get data from the other classes. Another part is validating input and ensuring that the input is all valid and that the operation is not illegal. Afterwards, it calls the `executeSplit()` method to divide it, with the method prompting for more information regarding the type of split (manual assignment, via absolute values and percentages or via equal splitting). It has to get the data of groups and friends from other classes, and saves and loads using the OwesStorage class. The OwesStorage class implements tamper-checking to help ensure that the data has not been manipulated while being stored.
 
-![ExpenseCRUDFeatureSequenceDiagram.drawio.png](diagrams/ExpenseCRUDFeatureSequenceDiagram.drawio.png)
+![SplitClassSequenceDiagram.png](diagrams/SplitClassSequenceDiagram.png)
 
 ### 4.3 Split Expense Feature
+
+![ApplicationFlowChart.drawio.png](diagrams/ApplicationFlowChart.drawio.png)
+
+O\$P\$ is the main class of application which the user can interact with directly. The command input from the user is processed by the UI class which validates and parses the command.
+This class will check for any valid keywords in the input. Once the keywords are present, it will pass the input to its respective classes that the command is related to (see above diagram)
+to validate the format and details of the command. Upon successful validation and execution of the command, the new data is written to the .txt files within the program directory and saved
+after the command duration has ended and upon exiting the program, handled by the DataStorage class.
 
 ### 4.4 Change Currency Feature
 
