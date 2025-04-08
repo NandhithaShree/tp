@@ -158,7 +158,7 @@ Clears all data in `expenses.txt`. Used mainly for testing.
 
 ### 3.1.2 GroupStorage Class
 
-The GroupStorage class is responsible for managing the storage of user-created groups and their associated members. 
+The GroupStorage class is responsible for managing the storage of user-created groups and their associated members.
 The group data is saved in a text file named groups.txt, and it is loaded whenever the application starts.
 
 ### File Handling
@@ -178,18 +178,18 @@ Saves a list of groups and their members to the data file.
 - Each group is stored with the following format:
   - Group header: `[GROUP]|<group_name>`
   - Friend entries: `<group_name>|<friend_name>`
-- Uses `FileWriter` for file operations. 
+- Uses `FileWriter` for file operations.
 - Handles `IOException` to manage file writing errors.
 
 #### `loadGroups()`
 
 Loads groups and their members from the data file.
 
-- Reads each line from the file and splits it using the `|` separator. 
-- Identifies group headers `([GROUP]|<group_name>)` and creates a new `Group` object. 
-- For each friend entry, associates the friend with the current group. 
-- Returns a list of `Group` objects. 
-- Uses `Scanner` for file reading. 
+- Reads each line from the file and splits it using the `|` separator.
+- Identifies group headers `([GROUP]|<group_name>)` and creates a new `Group` object.
+- For each friend entry, associates the friend with the current group.
+- Returns a list of `Group` objects.
+- Uses `Scanner` for file reading.
 - Handles `FileNotFoundException` when the file does not exist.
 
 ### 3.1.3 Commands Class
@@ -1016,11 +1016,13 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
   - Displays a success message if the group is deleted, otherwise uses `messages.displayMissingGroupMessage()` to indicate that the group was not found.
 
 ---
+
 #### Checking for member in a group
 
 - **Method:** `isMemberInGroup(String groupName, String memberName)`
 - **Features:**
   - Checks if the member exists in the specific group.
+
 ---
 
 #### Saving Groups
@@ -1162,7 +1164,7 @@ The Summary functionality is implemented through the `ExpenseCommand` class, whi
 3. **Export Functionality:**
 
    - Supports exporting summaries to text files via the `export/<type>` command
-   - Where `<type>` can be either `monthly` or `category wise`
+   - Where `<type>` can be either `monthly` or `category-wise`
    - Monthly summaries are exported to `monthly_summary.txt`
    - Category-wise summaries are exported to `category_summary.txt`
 
@@ -1229,11 +1231,11 @@ The Summary functionality is implemented through the `ExpenseCommand` class, whi
    - **Purpose:** Handles exporting summaries to text files
    - **Parameters:** `userInput` - The command string from the user
    - **Functionality:**
-     - Parses the input format (`export/<monthly | category wise>`)
+     - Parses the input format (`export/<monthly | category-wise>`)
      - Validates the export type parameter
      - Delegates to appropriate export method based on the specified type
      - Handles invalid formats and provides helpful error messages
-     - Supports "monthly" and "category wise" export types
+     - Supports "monthly" and "category-wise" export types
 
 6. **`exportMonthlySummary()`** and **`exportCategorySummary()`**
    - **Purpose:** Export specific summary types to text files
