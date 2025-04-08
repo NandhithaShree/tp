@@ -358,11 +358,31 @@ If you would like to include yourself in the group, please add your name as well
   Group created successfully!
   ```
 
+#### View friends and expenses in a certain group: `view-member`
+
+View a specific group and see how much each member owes.
+
+- **Format:** `view-group/<group-name>/<member name>`
+- **Usage:** `view-group/testGroup/john`
+
+- **Output:**
+
+  ```
+  Transactions for member 'john' in group 'testGroup':
+  Transaction: Expense: expense1, Date: 10-10-2025, Group: testGroup, Member: john owes: 10.00
+  Transaction: Expense: expense2, Date: 10-10-2025, Group: testGroup, Member: john owes: 30.00
+  Transaction: Expense: expense3, Date: 10-10-2025, Group: testGroup, Member: john owes: 60.00
+  Total Amount: 100.00
+
+  ```
+
+---
+
 ---
 
 #### View friends and expenses in a certain group: `view-group`
 
-View a specific group and see how much each member owes.
+View a specific group and its constituent members.
 
 - **Format:** `view-group/<group-name>`
 - **Usage:** `view-group/test`
@@ -370,10 +390,10 @@ View a specific group and see how much each member owes.
 - **Output:**
 
   ```
-  Group: test
+  Group: testGroup
   Members:
-  abc - Expense: $0.00
-  cde - Expense: $0.00
+  john
+  robert
 
   ```
 
@@ -463,106 +483,104 @@ Removes an entire group.
 
 ### Manage Payments:
 
-#### Select split method: `split`
+#### Split an expense among group members: `split`
 
-Splits an expense among members of a group either equally or manually (via absolute amounts or percentages).
+Splits a selected expense among members of a specific group, either **equally** or through **manual assignment**
+(using absolute amounts or percentages).
+
+- **Format:**
+`split/<equal | assign>/<expense index>/<group name>`
 
 - **Usage:**
+`split/equal/1/testGroup`
+
+- **Constraints:**
+
+- Expense index must be a **positive integer** (starting from 1).
+- The group must already exist and contain at least one member.
+- The same expense cannot be split more than once by the same group.
+- You can split either:
+  - Equally among all members, or
+  - Manually assign amounts using absolute values (`/a`) or percentages (`/p`).
+
+- **Examples:**
+
+- **Equal Split:**
 
   ```
-  split
-  [1] Split equally among all members of the selected group
-  [2] Manually assign amounts for each member in a group
-  [x]: Cancel
-  Enter option: 1
+  split/equal/1/friends
+  ```
 
-  Available expenses:
-  1. Lunch | Amount: 100.00
-  Enter expense number to split: 1
+  **Output:**
 
-  Enter group name for equal split: friends
+  ```
+  Selected expense amount: 100.00
   Splitting 100.00 equally among 2 members of group "friends":
-  - Alice owes: 50.00
-  - Bob owes: 50.00
-
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Alice owes: 50.00
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Bob owes: 50.00
   Updated list of transactions!
-  Here is the updated balance for group: friends
   ```
 
-- **Manual Split (absolute amounts):**
+- **Manual Split (Absolute Amounts):**
 
   ```
-  split
-  [1] Split equally among all members of the selected group
-  [2] Manually assign amounts for each member in a group
-  [x]: Cancel
-  Enter option: 2
+  split/assign/1/friends
+  ```
 
-  Available expenses:
-  1. Dinner | Amount: 100.00
-  Enter expense number to split: 1
+  **Prompted interaction:**
 
-  Enter group name for manual split: friends
+  ```
   Type '/a' for absolute amounts OR '/p' for percentages: /a
-
   Total expense amount to split: 100.00
   You can assign up to 100.00 in total.
   Enter amount for Alice: 30
   Remaining expense: 70.00
   Enter amount for Bob: 70
+  ```
 
+  **Output:**
+
+  ```
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Alice owes: 30.00
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Bob owes: 70.00
   Updated list of transactions!
   ```
 
-- **Manual Split (percentages):**
+- **Manual Split (Percentage-Based):**
 
   ```
-  split
-  [1] Split equally among all members of the selected group
-  [2] Manually assign amounts for each member in a group
-  [x]: Cancel
-  Enter option: 2
+  split/assign/1/friends
+  ```
 
-  Available expenses:
-  1. Brunch | Amount: 200.00
-  Enter expense number to split: 1
+  **Prompted interaction:**
 
-  Enter group name for manual split: friends
+  ```
   Type '/a' for absolute amounts OR '/p' for percentages: /p
-
-  Total expense is 200.00. You can assign up to 100% in total.
+  Total expense is 100.00. You can assign up to 100% in total.
   Enter percentage for Alice: 40
   Remaining percentage: 60.00%
   Enter percentage for Bob: 60
+  ```
 
-  - Alice owes: 80.00
-  - Bob owes: 120.00
+  **Output:**
 
+  ```
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Alice owes: 40.00
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Bob owes: 60.00
   Updated list of transactions!
-  Here is the updated balance for group: friends
   ```
 
----
+- **Notes:**
 
-### Select split method: `split`
-
-Allows an expense to be split among a certain group, either equally or via manually specified amounts/percentages.
-
-- **Format:** `split`
-
-- **Example output:**
-  ```
-  [1] Split equally among all members of the selected group
-  [2] Manually input percentage and members involved in transaction
-  [x]: Cancel
-  ```
-- **Next steps:**
-  ```
-  Select Transaction to split
-  Select group to split transaction with
-  *If selected [2] before, choose whether to split via absolute amounts or via percentage
-  Will display the total amounts owed by each member
-  ```
+- Names are taken to be unique throughout the entire program. "John" in group1 is the same as "John" in group2.
+- For the manual `assign` option, the absolute amount and percentage does not need to add up to 100% the full amount. While it cannot exceed the total value of the expense, the sum can be smaller than the full amount.
+- The split function does not take into account you as the user. Add yourself as a member to the group if you'd like to keep track of your split expenses in that particular group.
+- Each expense can only be split once per group.
+- Splitting an expense bakes in the value for that member, when the expense is edited/deleted, the amount owed for the members (when it was split) does not change.
+- Avoid using floating point numbers in the percentage ("/p" > "33.3") as it may be inprecise due to the way the number are stored.
+- Calling the split function does not mark or settle the expense. THe user has to manually trigger those events through the prescribed commands.
+- An expense can be split multiple times (by different groups).
+- All transaction details are stored per member and per group for tracking and retrieval.
 
 ---
 
