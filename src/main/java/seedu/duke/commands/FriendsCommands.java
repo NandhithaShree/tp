@@ -525,22 +525,22 @@ public class FriendsCommands {
         if (groupManager.groupExists(groupName)) {
             if (groupManager.isMemberInGroup(groupName, name)) {
                 System.out.println("Member '" + name +
-                 "' already exists in group '" + groupName + "'.");
+                    "' already exists in group '" + groupName + "'.");
                 return;
             }
             groupManager.addFriendToGroup(groupName, new Friend(name, groupName));
             groupManager.saveGroups();
             System.out.println(name + " has been added to " + groupName);
         } else {
-            System.out.print("Group does not exist."+
-            " Would you like to create this group first? (y/n): ");
+            System.out.print("Group does not exist." +
+                " Would you like to create this group first? (y/n): ");
             String response = scanner.nextLine().trim().toLowerCase();
 
             if (response.equals("y")) {
                 groupManager.addFriendToGroup(groupName, new Friend(name, groupName));
                 groupManager.saveGroups();
                 System.out.println("Group " + groupName +
-                 " has been created and " + name + " has been added.");
+                    " has been created and " + name + " has been added.");
             } else {
                 System.out.println("Operation cancelled. " + name + " was not added.");
             }
@@ -557,8 +557,8 @@ public class FriendsCommands {
     public void removeMember(String command) {
         String[] parts = command.trim().split(" */", 3);
         if (parts.length < 3 || !parts[0].equals("remove-member")) {
-            System.out.println("Invalid format."
-            +" Usage: remove-member/<member name>/<group-name>");
+            System.out.println("Invalid format." +
+                " Usage: remove-member/<member name>/<group-name>");
             return;
         }
 
@@ -566,21 +566,21 @@ public class FriendsCommands {
         String groupName = parts[2].trim();
 
         if (memberName.isEmpty() || !isValidName(memberName)) {
-            System.out.println("Invalid member name. "
-            +"Name cannot be empty or contain special characters.");
+            System.out.println("Invalid member name. " +
+                "Name cannot be empty or contain special characters.");
             return;
         }
 
         if (groupName.isEmpty() || !isValidName(groupName)) {
-            System.out.println("Invalid group name. "
-            +"Name cannot be empty or contain special characters.");
+            System.out.println("Invalid group name. " +
+                "Name cannot be empty or contain special characters.");
             return;
         }
 
         boolean memberExists = false;
         for (Group group: groupManager.getGroups()) {
-            if (group.getName().equals(groupName) 
-            && group.isMemberInGroup(memberName)) {
+            if (group.getName().equals(groupName) &&
+                group.isMemberInGroup(memberName)) {
                 memberExists = true;
                 break;
             }
@@ -591,12 +591,12 @@ public class FriendsCommands {
             return;
         }
 
-        System.out.print("Are you sure you want to remove " 
-        + memberName + " from " + groupName + "? (y/n): ");
+        System.out.print("Are you sure you want to remove " +
+            memberName + " from " + groupName + "? (y/n): ");
         String confirm = scanner.nextLine().trim().toLowerCase();
         if (!confirm.equals("y")) {
-            System.out.println("Operation cancelled. " 
-            + memberName + " was not removed from " + groupName);
+            System.out.println("Operation cancelled. " +
+                memberName + " was not removed from " + groupName);
             return;
         }
 
@@ -637,8 +637,8 @@ public class FriendsCommands {
             return;
         }
 
-        System.out.print("Are you sure you want to remove the group " 
-        + groupName + "? (y/n): ");
+        System.out.print("Are you sure you want to remove the group " +
+            groupName + "? (y/n): ");
         String confirm = scanner.nextLine().trim().toLowerCase();
         if (!confirm.equals("y")) {
             System.out.println("Operation cancelled. Group " + groupName + " was not removed.");
