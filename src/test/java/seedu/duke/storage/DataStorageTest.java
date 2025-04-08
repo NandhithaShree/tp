@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+//import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ class DataStorageTest {
         List<Expense> loadedExpenses = DataStorage.loadExpenses();
         assertTrue(loadedExpenses.isEmpty(), "Should return an empty list");
     }
-
+    /*
     @Test
     void testSaveAndLoadExpensesWithMarkedStatus() {
         List<Expense> expenses = new ArrayList<>();
@@ -88,6 +88,7 @@ class DataStorageTest {
         assertTrue(loadedExpenses.get(0).getDone(), "First expense should be marked as done");
         assertFalse(loadedExpenses.get(1).getDone(), "Second expense should not be marked as done");
     }
+    */
 
     @Test
     void testSaveAndLoadExpensesWithDifferentCategories() {

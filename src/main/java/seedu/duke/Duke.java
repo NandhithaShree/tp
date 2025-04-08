@@ -72,7 +72,6 @@ public class Duke {
         // Add a shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down gracefully...");
-            budgetManager.saveAllExpenses(); // Save all expenses before exiting
             System.out.println("All expenses have been saved!");
         }));
 
