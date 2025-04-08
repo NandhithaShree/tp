@@ -143,7 +143,7 @@ class SplitCommandTest {
         assertTrue(output.contains("No expenses available to split"),
             "Expected error when no expenses exist.");
     }
-/*
+    /*
     @Test
     void testGroupNotFound() {
         Expense expense = new Expense("Lunch", Categories.Food, "01-01-2025", 100.0);
