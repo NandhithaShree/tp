@@ -111,7 +111,6 @@ public class UI {
         if(command.equals(Commands.HELP)){
             messages.displayCommandList();
         } else if(command.equals(Commands.EXIT)){
-            budgetManager.saveAllExpenses();
             messages.displayExitMessage();
             isRunning = false;
         } else if(command.startsWith(Commands.ADD_MEMBER)){

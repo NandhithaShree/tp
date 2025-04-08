@@ -74,17 +74,17 @@ public class DataStorage {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split("\\|");
-                if (parts.length >= 6) {
+                if (parts.length >= 4) {
                     String title = parts[0];
                     Categories category = Categories.valueOf(parts[1]);
                     String date = parts[2];
                     double amount = Double.parseDouble(parts[3]);
-                    boolean isDone = Boolean.parseBoolean(parts[4]);
-                    String groupName = parts[5];
+                    //boolean isDone = Boolean.parseBoolean(parts[4]);
+                    //String groupName = parts[5];
                     
                     Expense expense = new Expense(title, category, date, amount);
-                    expense.setDone(isDone);
-                    expense.setGroupName(groupName);
+                    //expense.setDone(isDone);
+                    //expense.setGroupName(groupName);
                     expenses.add(expense);
                 }
             }
