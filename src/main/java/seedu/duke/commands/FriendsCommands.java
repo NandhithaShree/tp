@@ -103,8 +103,8 @@ public class FriendsCommands {
             return;
         }
         if (!OwesStorage.verifyChecksum()) {
-            System.out.println("Error: The owedAmounts file has likely been tampered with." +
-                "Clearing contents of the file");
+            System.out.println("Error: The owedAmounts file has likely been tampered with.");
+            System.out.println("Clearing contents of the file");
 
             // clear the file
             try (PrintWriter writer = new PrintWriter("owedAmounts.txt")) {

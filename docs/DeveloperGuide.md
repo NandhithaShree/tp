@@ -445,6 +445,10 @@ The `viewMember(String command)` method is responsible for displaying the transa
 
   - Checks whether the group exists, and whether the entered member name is part of the mentioned group.
 
+- **Tampering Checking:**
+
+  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+
 - **Loading Expense Data:**
 
   - The method reads from the `owedAmounts.txt` file, which contains expense data.
@@ -463,6 +467,43 @@ The `viewGroup(String command)` method is responsible for displaying the details
 - **Group Existence Check:**
 
   - Uses the `groupManager.groupExists(String groupName)` method to check whether the specified group exists.
+  - If the group does not exist, the method prints a "Group not found" message and terminates.
+
+  - **Tampering Checking:**
+
+  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+
+- **Loading Expense Data:**
+
+  - The method reads from the `owedAmounts.txt` file, which contains expense data.
+  - It loads this data into a map owedAmounts, where:
+    - The key is the member's name.
+    - The value is the accumulated amount they owe.
+  - The method ensures that the amounts are accumulated for each member instead of being overwritten.
+
+- **Display Group Members and Expenses:**
+  - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
+  - If the group has no members, it displays "No members in this group."
+  - For each member, it:
+    - Retrieves their name.
+    - Checks the owedAmounts map for any recorded expenses.
+    - Displays the member's name along with the accumulated expense amount.
+  - If a member has no recorded expense, the amount displayed is 0.00.
+
+
+#### Viewing an existing group
+
+The `viewGroup()` method is responsible for displaying the details of a specific group, it includes its members and associated expenses.
+This method is essential for users who wish to view group details and any expenses related to group members.
+
+- **Input:**
+
+  - Prompts user to enter the group name that they want to view.
+  - Trims any extra whitespaces from the input.
+
+- **Group Existence Check:**
+
+  - Uses the `groupManager.groupExists()` method to check whether the specified group exists.
   - If the group does not exist, the method prints a "Group not found" message and terminates.
 
 - **Loading Expense Data:**
