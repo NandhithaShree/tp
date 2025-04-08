@@ -331,8 +331,8 @@ If you would like to include yourself in the group, please add your name as well
 
 View a specific group and see how much each member owes.
 
-- **Format:** `view-group/<group-name>/<member name>`
-- **Usage:** `view-group/testGroup/john`
+- **Format:** `view-member/<group-name>/<member name>`
+- **Usage:** `view-member/testGroup/john`
 
 - **Output:**
 
@@ -360,11 +360,14 @@ View a specific group and its constituent members.
 
   ```
   Group: testGroup
-  Members:
-  john
-  robert
+  Members and Expenses:
+  john - Expense: $50.00
+  robert - Expense: $50.00
 
   ```
+  - **Notes:**
+
+- The expenses are summed from the member in that group. (If John exists in both testGroup and testGroup1, running `view-group/testGroup` will not sum the split expenses attributed to him from when the user split with `testGroup1`).
 
 ---
 
@@ -541,7 +544,7 @@ Splits a selected expense among members of a specific group, either **equally** 
 
 - **Notes:**
 
-- Names are taken to be unique throughout the entire program. "John" in group1 is the same as "John" in group2.
+- Names are taken to be unique throughout the entire program. "John" in group1 is the same as "John" in group2. Splitting is within each group.
 - For the manual `assign` option, the absolute amount and percentage does not need to add up to 100% the full amount. While it cannot exceed the total value of the expense, the sum can be smaller than the full amount.
 - The split function does not take into account you as the user. Add yourself as a member to the group if you'd like to keep track of your split expenses in that particular group.
 - Each expense can only be split once per group.
