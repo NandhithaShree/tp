@@ -205,11 +205,8 @@ public class Messages {
 
             export
               Description: Export expense summaries to text files
-              Usage: export
-              You will be prompted to choose:
-                1. Monthly Summary: Exports to monthly_summary.txt
-                2. Category-wise Summary: Exports to category_summary.txt
-                3. Back to main menu
+              Usage: export/<monthly | category wise>
+              
 
             change-currency
               Description: Change all your expenses to a different currency

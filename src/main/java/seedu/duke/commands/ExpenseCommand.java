@@ -845,6 +845,13 @@ public class ExpenseCommand {
      * Exports the expense summary to a file.
      */
     public void exportExpenseSummary(String userInput) {
+        // Check if there are any expenses to export first
+        List<Expense> expenses = budgetManager.getAllExpenses();
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses to export!");
+            return;
+        }
+        
         // Split and trim to handle multiple spaces
         String[] parts = userInput.split("/", 2);
         
@@ -873,7 +880,9 @@ public class ExpenseCommand {
             assert expenses != null : "Expenses list should not be null";
             
             if (expenses.isEmpty()) {
-                writer.write("No expenses found.");
+                // This check is now redundant since we check in exportExpenseSummary,
+                // but keeping for defensive programming
+                System.out.println("No expenses to export!");
                 return;
             }
 
@@ -929,7 +938,9 @@ public class ExpenseCommand {
             assert expenses != null : "Expenses list should not be null";
             
             if (expenses.isEmpty()) {
-                writer.write("No expenses found.");
+                // This check is now redundant since we check in exportExpenseSummary,
+                // but keeping for defensive programming
+                System.out.println("No expenses to export!");
                 return;
             }
 

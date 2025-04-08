@@ -51,6 +51,8 @@ present and future, as long as it is a legitimate date (e.g. NOT 99-99-9999).
 Once the expense has been added, it is unsettled. Typing `list-unsettled` will allow you to view
 your newly added expense, just like `list`.
 
+The `category` field has to be one of these categories (Food/Travel/Entertainment/Shopping/Miscellaneous).
+
 The `amount` can be entered as a whole number or floating-point number. The result will be rounded off to 2 decimal
 places. The `amount` is capped at 50,000SGD or its equivalent if your expenses are in another currency.
 
@@ -59,6 +61,7 @@ places. The `amount` is capped at 50,000SGD or its equivalent if your expenses a
 ```
 add/Chicken Rice/Food/25-12-2025/100
 ```
+
 ```
 Expense added successfully:
 Title: chicken rice
@@ -93,17 +96,17 @@ Expense edited successfully:
 Title: chicken rice
 Category: Food
 Date: 20-08-2004
-Amount: 20.00
+Amount: 100.00
 ```
 
-If you choose to change the category within 200 characters:
+If you choose to change the category:
 
 ```
 Expense edited successfully:
 Title: chicken rice
 Category: Micellaneous
 Date: 20-08-2004
-Amount: 100.00
+Amount: 20.00
 ```
 
 If you choose to keep the current category:
@@ -113,7 +116,7 @@ Expense edited successfully:
 Title: chicken rice
 Category: Food
 Date: 20-08-2004
-Amount: 100.00
+Amount: 20.00
 ```
 
 ---
@@ -566,16 +569,17 @@ Displays comprehensive analytics of your expenses through different visualizatio
 
   1. **Monthly Summary (`summary/BY-MONTH/N`)**
 
-    - Shows total expenses for each month
-    - Lists all expenses within each month
-    - Displays expense count per month
-    - No visualization available for monthly view
+  - Shows total expenses for each month
+  - Lists all expenses within each month
+  - Displays expense count per month
+  - No visualization available for monthly view
 
   2. **Category-wise Summary (`summary/BY-CATEGORY/Y` or `summary/BY-CATEGORY/N`)**
-    - Breaks down expenses into categories (Food, Travel, Entertainment, Shopping, Miscellaneous)
-    - Shows total amount and count for each category
-    - Optional pie chart visualization (Y/N)
-    - Displays percentage distribution across categories
+
+  - Breaks down expenses into categories (Food, Travel, Entertainment, Shopping, Miscellaneous)
+  - Shows total amount and count for each category
+  - Optional pie chart visualization (Y/N)
+  - Displays percentage distribution across categories
 
 - **Example Usage:**
 
@@ -609,6 +613,65 @@ Displays comprehensive analytics of your expenses through different visualizatio
   - **IMPORTANT**: You must close the pie chart window before exiting the program. Due to a limitation in the visualization API, if you do not close the window, the program will not terminate properly.
   - Chart window will automatically close when program exits
   - Close the chart window to return to the application
+
+---
+
+### Export Summary Reports:
+
+#### Export expense summaries: `export`
+
+Exports your expense summaries to text files for record-keeping, sharing, or external analysis.
+
+- **Format:** `export/<monthly|category wise>`
+
+  - Parameter must be either `monthly` or `category wise`
+
+- **Features:**
+
+  1. **Monthly Summary Export (`export/monthly`)**
+
+     - Exports data to `monthly_summary.txt`
+     - Contains total expenses for each month
+     - Lists all expenses within each month with details
+     - Maintains the same format as the monthly summary display
+
+  2. **Category-wise Summary Export (`export/category wise`)**
+     - Exports data to `category_summary.txt`
+     - Contains breakdown of expenses by category
+     - Shows total amount and count for each category
+     - Displays percentage distribution across categories
+
+- **Example Usage:**
+
+  ```
+  export/monthly
+  ```
+
+- **Output:**
+
+  ```
+  Monthly summary exported to monthly_summary.txt
+  ```
+
+- **Example File Content (monthly_summary.txt):**
+
+  ```
+  Monthly Expense Summary:
+  ----------------------
+  03-2025: $300.00 (1 expenses)
+    Expenses:
+    - March Expense (15-03-2025): $300.00
+
+  04-2025: $400.00 (1 expenses)
+    Expenses:
+    - April Expense (15-04-2025): $400.00
+  ```
+
+- **Notes:**
+  - Files are created in the same directory as the application
+  - Existing files with the same name will be overwritten
+  - The export uses the same formatting as the in-app summary display
+  - Text files can be opened with any text editor
 
 ---
 
@@ -760,4 +823,5 @@ Here's a quick reference for all available commands:
 | Remove Group    | `remove-group/<group-name>`                             | `remove-group/test`           |
 | Split Expense   | `split`                                                 | `split` (then follow prompts) |
 | View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`       |
+| Export Summary  | `export/<monthly\|category wise>`                       | `export/monthly`              |
 | Sort List       | `sort-list/<option>`                                    | `sort-list/1`                 |
